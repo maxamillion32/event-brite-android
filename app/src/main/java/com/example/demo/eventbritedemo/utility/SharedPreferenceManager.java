@@ -2,6 +2,7 @@ package com.example.demo.eventbritedemo.utility;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.example.demo.eventbritedemo.ApplicationClass;
 import com.google.gson.Gson;
@@ -144,11 +145,13 @@ public final class SharedPreferenceManager {
     }
 
     public static void setAccessToken(String value) {
-        setStringValue("access_token", value);
+        setStringValue(Constants.SharedPreferencesKeys.ACCESS_TOKEN, value);
     }
 
     public static String getAccessToken() {
-        return getStringValue("access_token");
+        final String accessToken = getStringValue(Constants.SharedPreferencesKeys.ACCESS_TOKEN);
+        Log.d("Access token", "" + accessToken);
+        return accessToken;
     }
 
     public static String getUserId() {

@@ -350,6 +350,13 @@ public class EventResponseModel {
             private String text;
             private String html;
 
+            public NameEntity() {
+            }
+
+            public NameEntity(String html) {
+                this.html = html;
+            }
+
             public String getText() {
                 return text;
             }
@@ -393,6 +400,18 @@ public class EventResponseModel {
             private String local;
             private String utc;
 
+            public StartEntity(String timezone, String utc) {
+                this.timezone = timezone;
+                this.utc = utc;
+            }
+
+            public StartEntity(String utc) {
+                this.utc = utc;
+            }
+
+            public StartEntity() {
+            }
+
             public String getTimezone() {
                 return timezone;
             }
@@ -422,6 +441,14 @@ public class EventResponseModel {
             private String timezone;
             private String local;
             private String utc;
+
+            public EndEntity(String timezone, String utc) {
+                this.timezone = timezone;
+                this.utc = utc;
+            }
+
+            public EndEntity() {
+            }
 
             public String getTimezone() {
                 return timezone;

@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-</LinearLayout>
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/loading_layout"/>
+
+        <include layout="@layout/error_layout"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerEventList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </ViewFlipper>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnCreateEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"/>
+</RelativeLayout>

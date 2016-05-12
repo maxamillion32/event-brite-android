@@ -19,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String REDIRECT_URI = "localhost";
     private static final String APP_KEY = "IOLSNXK2AFZLT7SHSA";
@@ -50,10 +50,6 @@ public class MainActivity extends AppCompatActivity {
         final WebView webView = (WebView) findViewById(R.id.webView);
         assert null != webView;
         webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -89,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<AuthResponseModel> call, Throwable t) {
-                        Log.d(MainActivity.class.getSimpleName(), t.toString());
+                        Log.d(LoginActivity.class.getSimpleName(), t.toString());
                     }
                 });
     }

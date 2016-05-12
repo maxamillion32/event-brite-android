@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -20,6 +20,7 @@
         </activity>
 
         <activity android:name=".activity.EventListActivity"/>
+        <activity android:name=".activity.CreateNewEventActivity"/>
     </application>
 
 </manifest>

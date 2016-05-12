@@ -4,6 +4,7 @@ import com.example.demo.eventbritedemo.model.AuthResponseModel;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.UserDetailModel;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -25,18 +27,16 @@ public class WebService {
 
     public static <T> T createRetrofitService(final Class<T> clazz, final String endpoint) {
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
+        final OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         final Retrofit restAdapter = new Retrofit.Builder()
                 .baseUrl(endpoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-        final T service = restAdapter.create(clazz);
-        return service;
+        return restAdapter.create(clazz);
     }
 
     public static <T> T createServiceWithOauthHeader(final Class<T> clazz, final String endpoint) {
@@ -52,7 +52,7 @@ public class WebService {
                 return chain.proceed(request);
             }
         });
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(loggingInterceptor);
 
@@ -62,8 +62,7 @@ public class WebService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-        final T service = restAdapter.create(clazz);
-        return service;
+        return restAdapter.create(clazz);
     }
 
     public interface ApiCallMethods {
@@ -82,6 +81,8 @@ public class WebService {
 
         @GET("/v3/users/me")
         Call<UserDetailModel> getUserDetails();
-    }
 
+        @POST("/v3/events")
+        Call<JsonObject> createNewEvent(@Body JsonObject model);
+    }
 }
