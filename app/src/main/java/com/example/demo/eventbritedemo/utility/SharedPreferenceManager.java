@@ -150,4 +150,8 @@ public final class SharedPreferenceManager {
     public static String getAccessToken() {
         return getStringValue("access_token");
     }
+
+    public static String getUserId() {
+        return getStringValue(Constants.SharedPreferencesKeys.USER_ID);
+    }
 }

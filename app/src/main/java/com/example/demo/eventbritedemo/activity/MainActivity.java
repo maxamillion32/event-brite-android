@@ -1,13 +1,17 @@
 package com.example.demo.eventbritedemo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.AuthResponseModel;
+import com.example.demo.eventbritedemo.model.UserDetailModel;
+import com.example.demo.eventbritedemo.utility.Constants;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
@@ -29,7 +33,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showPage(OAUTH_URL);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (TextUtils.isEmpty(SharedPreferenceManager.getAccessToken())) {
+            showPage(OAUTH_URL);
+        } else {
+            //access_token already present
+            gotoEventListActivity();
+        }
     }
 
     protected void showPage(String url) {
@@ -57,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void authorizeUser() {
-        final WebService.AccessTokenService service = WebService.createRetrofitService
-                (WebService.AccessTokenService.class, WebService.AccessTokenService
-                        .SERVICE_ENDPOINT);
+        final WebService.ApiCallMethods service = WebService.createRetrofitService
+                (WebService.ApiCallMethods.class, WebService.ApiCallMethods.OAUTH_ENDPOINT);
 
-        service.getAccessToken(ACCESS_CODE, CLIENT_SECRET, APP_KEY, "authorization_code")
+        service
+                .getAccessToken(ACCESS_CODE, CLIENT_SECRET, APP_KEY, "authorization_code")
                 .enqueue(new Callback<AuthResponseModel>() {
                     @Override
                     public void onResponse(Call<AuthResponseModel> call,
@@ -69,13 +83,45 @@ public class MainActivity extends AppCompatActivity {
                         if (response.isSuccessful() && null != response.body()) {
                             SharedPreferenceManager.setAccessToken(response.body()
                                     .getAccess_token());
+                            getUserDetails();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<AuthResponseModel> call, Throwable t) {
-                        Log.d("TTT", t.toString());
+                        Log.d(MainActivity.class.getSimpleName(), t.toString());
                     }
                 });
     }
+
+    private void getUserDetails() {
+
+        final WebService.ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
+                (WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
+
+        retrofitService
+                .getUserDetails()
+                .enqueue(new Callback<UserDetailModel>() {
+                    @Override
+                    public void onResponse(Call<UserDetailModel> call,
+                                           Response<UserDetailModel> response) {
+                        SharedPreferenceManager.setStringValue(
+                                Constants.SharedPreferencesKeys.USER_ID,
+                                response.body().getId()
+                        );
+                        gotoEventListActivity();
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserDetailModel> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void gotoEventListActivity() {
+        startActivity(new Intent(this, EventListActivity.class));
+        finish();
+    }
+
 }
