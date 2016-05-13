@@ -12,11 +12,9 @@ import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.utility.Constants;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
-import com.example.demo.eventbritedemo.utility.Validation;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EventListActivity extends AppCompatActivity implements Constants.ViewFlipperConstants {
@@ -53,20 +51,15 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
                 (WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
 
         retrofitService.getEventListForId(SharedPreferenceManager.getUserId())
-                .enqueue(new Callback<EventResponseModel>() {
-                    @Override
-                    public void onResponse(Call<EventResponseModel> call,
-                                           Response<EventResponseModel> response) {
-                        if (Validation.isValidResponse(response)) {
-                            displayEventList(response.body());
-                        } else {
-                            onFailure(call, null);
-                        }
-                    }
-
+                .enqueue(new WebService.CustomCallback<EventResponseModel>() {
                     @Override
                     public void onFailure(Call<EventResponseModel> call, Throwable t) {
                         viewFlipper.setDisplayedChild(ERROR);
+                    }
+
+                    @Override
+                    protected void success(Response<EventResponseModel> response) {
+                        displayEventList(response.body());
                     }
                 });
     }

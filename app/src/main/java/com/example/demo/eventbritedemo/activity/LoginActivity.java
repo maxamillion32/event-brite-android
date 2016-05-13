@@ -15,8 +15,6 @@ import com.example.demo.eventbritedemo.utility.Constants;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
@@ -72,20 +70,12 @@ public class LoginActivity extends AppCompatActivity {
 
         service
                 .getAccessToken(ACCESS_CODE, CLIENT_SECRET, APP_KEY, "authorization_code")
-                .enqueue(new Callback<AuthResponseModel>() {
+                .enqueue(new WebService.CustomCallback<AuthResponseModel>() {
                     @Override
-                    public void onResponse(Call<AuthResponseModel> call,
-                                           Response<AuthResponseModel> response) {
-                        if (response.isSuccessful() && null != response.body()) {
-                            SharedPreferenceManager.setAccessToken(response.body()
-                                    .getAccess_token());
-                            getUserDetails();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AuthResponseModel> call, Throwable t) {
-                        Log.d(LoginActivity.class.getSimpleName(), t.toString());
+                    protected void success(Response<AuthResponseModel> response) {
+                        SharedPreferenceManager.setAccessToken(response.body()
+                                .getAccess_token());
+                        getUserDetails();
                     }
                 });
     }
@@ -97,20 +87,15 @@ public class LoginActivity extends AppCompatActivity {
 
         retrofitService
                 .getUserDetails()
-                .enqueue(new Callback<UserDetailModel>() {
+                .enqueue(new WebService.CustomCallback<UserDetailModel>() {
+
                     @Override
-                    public void onResponse(Call<UserDetailModel> call,
-                                           Response<UserDetailModel> response) {
+                    protected void success(Response<UserDetailModel> response) {
                         SharedPreferenceManager.setStringValue(
                                 Constants.SharedPreferencesKeys.USER_ID,
                                 response.body().getId()
                         );
                         gotoEventListActivity();
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserDetailModel> call, Throwable t) {
-
                     }
                 });
     }

@@ -5,12 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.example.demo.eventbritedemo.utility.Validation;
+import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateNewEventActivity extends AppCompatActivity {
@@ -18,6 +16,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_new_event);
         createNewEvent();
     }
 
@@ -28,20 +27,11 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         service
                 .createNewEvent(getEventDetails())
-                .enqueue(new Callback<JsonObject>() {
+                .enqueue(new WebService.CustomCallback<JsonObject>() {
                     @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        if (Validation.isValidResponse(response)) {
-                            Toast.makeText(getBaseContext(), "Event Added Successfully",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            onFailure(call, null);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                    protected void success(Response<JsonObject> response) {
+                        Toast.makeText(getBaseContext(), "Event Added Successfully",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }

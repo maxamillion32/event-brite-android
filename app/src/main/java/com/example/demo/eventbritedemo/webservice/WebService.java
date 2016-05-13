@@ -1,9 +1,12 @@
 package com.example.demo.eventbritedemo.webservice;
 
+import android.support.annotation.NonNull;
+
 import com.example.demo.eventbritedemo.model.AuthResponseModel;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.UserDetailModel;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
+import com.example.demo.eventbritedemo.utility.Validation;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -14,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
@@ -25,25 +29,74 @@ import retrofit2.http.Query;
 
 public class WebService {
 
+    /**
+     * basic rest adapter generator
+     *
+     * @param clazz
+     * @param endpoint
+     * @param <T>
+     * @return
+     */
     public static <T> T createRetrofitService(final Class<T> clazz, final String endpoint) {
+        final OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(getHttpLoggingInterceptor()).build();
+        final Retrofit restAdapter = getRetrofitInstance(endpoint, client);
+        return restAdapter.create(clazz);
+    }
 
-        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        final OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        final Retrofit restAdapter = new Retrofit.Builder()
+    /**
+     * basic retrofit instance generator
+     *
+     * @param endpoint
+     * @param client
+     * @return
+     */
+    @NonNull
+    private static Retrofit getRetrofitInstance(String endpoint, OkHttpClient client) {
+        return new Retrofit.Builder()
                 .baseUrl(endpoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
+    }
+
+    /**
+     * for logging purpose
+     *
+     * @return
+     */
+    @NonNull
+    private static HttpLoggingInterceptor getHttpLoggingInterceptor() {
+        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+    }
+
+    /**
+     * rest adapter with OAuth Header
+     *
+     * @param clazz
+     * @param endpoint
+     * @param <T>
+     * @return
+     */
+    public static <T> T createServiceWithOauthHeader(final Class<T> clazz, final String endpoint) {
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(getAuthorizationHeader());
+        httpClient.addInterceptor(getHttpLoggingInterceptor());
+        final OkHttpClient client = httpClient.build();
+        final Retrofit restAdapter = getRetrofitInstance(endpoint, client);
         return restAdapter.create(clazz);
     }
 
-    public static <T> T createServiceWithOauthHeader(final Class<T> clazz, final String endpoint) {
-        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
+    /**
+     * interceptor with OAuth header
+     *
+     * @return
+     */
+    @NonNull
+    private static Interceptor getAuthorizationHeader() {
+        return new Interceptor() {
             @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
+            public Response intercept(Chain chain) throws IOException {
                 final Request original = chain.request();
                 final Request request = original.newBuilder()
                         .header("Authorization",
@@ -51,18 +104,31 @@ public class WebService {
                         .build();
                 return chain.proceed(request);
             }
-        });
-        final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        httpClient.addInterceptor(loggingInterceptor);
+        };
+    }
 
-        final OkHttpClient client = httpClient.build();
-        final Retrofit restAdapter = new Retrofit.Builder()
-                .baseUrl(endpoint)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        return restAdapter.create(clazz);
+    /**
+     * callback methods with least validation
+     *
+     * @param <T>
+     */
+    public static abstract class CustomCallback<T> implements Callback<T> {
+
+        @Override
+        public void onResponse(Call<T> call, retrofit2.Response<T> response) {
+            if (Validation.isValidResponse(response)) {
+                success(response);
+            } else {
+                onFailure(call, null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<T> call, Throwable t) {
+
+        }
+
+        protected abstract void success(retrofit2.Response<T> response);
     }
 
     public interface ApiCallMethods {
@@ -70,7 +136,7 @@ public class WebService {
         String SERVICE_ENDPOINT = "https://www.eventbriteapi.com/";
 
         @FormUrlEncoded
-        @POST("oauth/token/")
+        @POST("oauth/token")
         Call<AuthResponseModel> getAccessToken(@Field("code") String code,
                                                @Field("client_secret") String client_secret,
                                                @Field("client_id") String client_id,
