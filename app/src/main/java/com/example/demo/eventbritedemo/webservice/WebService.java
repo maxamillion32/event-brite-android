@@ -66,23 +66,23 @@ public class WebService {
     }
 
     public interface ApiCallMethods {
-        String OAUTH_ENDPOINT = "https://www.eventbrite.com";
-        String SERVICE_ENDPOINT = "https://www.eventbriteapi.com";
+        String OAUTH_ENDPOINT = "https://www.eventbrite.com/";
+        String SERVICE_ENDPOINT = "https://www.eventbriteapi.com/";
 
         @FormUrlEncoded
-        @POST("/oauth/token")
+        @POST("oauth/token/")
         Call<AuthResponseModel> getAccessToken(@Field("code") String code,
                                                @Field("client_secret") String client_secret,
                                                @Field("client_id") String client_id,
                                                @Field("grant_type") String grant_type);
 
-        @GET("/v3/events/search")
+        @GET("v3/events/search/")
         Call<EventResponseModel> getEventListForId(@Query("user.id") String userId);
 
-        @GET("/v3/users/me")
+        @GET("v3/users/me/")
         Call<UserDetailModel> getUserDetails();
 
-        @POST("/v3/events")
+        @POST("v3/events/")
         Call<JsonObject> createNewEvent(@Body JsonObject model);
     }
 }
