@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 .getAccessToken(ACCESS_CODE, CLIENT_SECRET, APP_KEY, "authorization_code")
                 .enqueue(new WebService.CustomCallback<AuthResponseModel>() {
                     @Override
-                    protected void success(Response<AuthResponseModel> response) {
+                    public void success(Response<AuthResponseModel> response) {
                         SharedPreferenceManager.setAccessToken(response.body()
                                 .getAccess_token());
                         getUserDetails();
@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 .enqueue(new WebService.CustomCallback<UserDetailModel>() {
 
                     @Override
-                    protected void success(Response<UserDetailModel> response) {
+                    public void success(Response<UserDetailModel> response) {
                         SharedPreferenceManager.setStringValue(
                                 Constants.SharedPreferencesKeys.USER_ID,
                                 response.body().getId()

@@ -1,7 +1,9 @@
 package com.example.demo.eventbritedemo.webservice;
 
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
+import com.example.demo.eventbritedemo.ApplicationClass;
 import com.example.demo.eventbritedemo.model.AuthResponseModel;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.UserDetailModel;
@@ -15,6 +17,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +28,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class WebService {
@@ -125,10 +129,10 @@ public class WebService {
 
         @Override
         public void onFailure(Call<T> call, Throwable t) {
-
+            Toast.makeText(ApplicationClass.getInstance(), "ERROR!!!!!", Toast.LENGTH_LONG).show();
         }
 
-        protected abstract void success(retrofit2.Response<T> response);
+        public abstract void success(retrofit2.Response<T> response);
     }
 
     public interface ApiCallMethods {
@@ -149,6 +153,15 @@ public class WebService {
         Call<UserDetailModel> getUserDetails();
 
         @POST("v3/events/")
-        Call<JsonObject> createNewEvent(@Body JsonObject model);
+        Call<EventResponseModel.EventsEntity> createNewEvent(@Body JsonObject model);
+
+        @POST("v3/events/{id}/publish/")
+        Call<ResponseBody> publishEvent(@Path("id") String id);
+
+        @POST("v3/venues/{id}/")
+        Call<ResponseBody> updateVenue(@Path("id") String id, @Body JsonObject body);
+
+        @POST("v3/venues/")
+        Call<ResponseBody> createVenue(@Body JsonObject body);
     }
 }

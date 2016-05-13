@@ -52,14 +52,15 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
 
         retrofitService.getEventListForId(SharedPreferenceManager.getUserId())
                 .enqueue(new WebService.CustomCallback<EventResponseModel>() {
+
                     @Override
-                    public void onFailure(Call<EventResponseModel> call, Throwable t) {
-                        viewFlipper.setDisplayedChild(ERROR);
+                    public void success(Response<EventResponseModel> response) {
+                        displayEventList(response.body());
                     }
 
                     @Override
-                    protected void success(Response<EventResponseModel> response) {
-                        displayEventList(response.body());
+                    public void onFailure(Call<EventResponseModel> call, Throwable t) {
+                        viewFlipper.setDisplayedChild(ERROR);
                     }
                 });
     }
