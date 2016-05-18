@@ -173,5 +173,8 @@ public class WebService {
 
         @POST("v3/events/{id}/ticket_classes/")
         Call<ResponseBody> createTicket(@Path("id") String id, @Body JsonObject body);
+
+        @GET("v3/events/search/")
+        Call<EventResponseModel> searchEventWith(@Query("q") String stringVal);
     }
 }

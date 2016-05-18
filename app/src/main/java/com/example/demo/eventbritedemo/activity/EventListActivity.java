@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ViewFlipper;
 
@@ -42,6 +44,22 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
     protected void onStart() {
         super.onStart();
         getEventList();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                startActivity(new Intent(this, SearchEventActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void getEventList() {

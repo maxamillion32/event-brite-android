@@ -21,6 +21,7 @@
 
         <activity android:name=".activity.EventListActivity"/>
         <activity android:name=".activity.CreateNewEventActivity"/>
+        <activity android:name=".activity.SearchEventActivity"/>
     </application>
 
 </manifest>
