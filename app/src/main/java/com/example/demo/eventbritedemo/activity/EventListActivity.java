@@ -11,7 +11,6 @@ import android.widget.ViewFlipper;
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.utility.Constants;
-import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
 import retrofit2.Call;
@@ -50,7 +49,7 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
         final WebService.ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
                 (WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
 
-        retrofitService.getEventListForId(SharedPreferenceManager.getUserId())
+        retrofitService.getOwnedEventListWithStatus("live")
                 .enqueue(new WebService.CustomCallback<EventResponseModel>() {
 
                     @Override

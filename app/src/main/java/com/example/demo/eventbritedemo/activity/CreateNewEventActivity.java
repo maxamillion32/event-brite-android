@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
+import com.example.demo.eventbritedemo.model.VenueModel;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
@@ -24,6 +25,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private Button btnCreateEvent;
     private Button btnPublishEvent;
     private EventResponseModel.EventsEntity eventsEntity;
+    private VenueModel venueEntity;
     private Button venue;
     private WebService.ApiCallMethods service;
 
@@ -54,34 +56,42 @@ public class CreateNewEventActivity extends AppCompatActivity {
         btnPublishEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateVenue();
+                publishEvent();
             }
         });
 
         venue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createVenue();
+//                createVenue();
             }
         });
     }
 
     private void createVenue() {
-        service.
-                createVenue(getVenueDetails())
-                .enqueue(new WebService.CustomCallback<ResponseBody>() {
+        service
+                .createVenue(getVenueDetails())
+                .enqueue(new WebService.CustomCallback<VenueModel>() {
                     @Override
-                    public void success(Response<ResponseBody> response) {
-
+                    public void success(Response<VenueModel> response) {
+                        venueEntity = response.body();
                     }
                 });
     }
 
     private JsonObject getVenueDetails() {
-        final JsonObject model = new JsonObject();
+        final JsonObject venue = new JsonObject();
 
-        model.addProperty("venue", "United States");
-        model.add("address");
+        venue.addProperty("name", "United States");
+
+        final JsonObject address = new JsonObject();
+        address.addProperty("latitude", "40.690302");
+        address.addProperty("longitude", "-73.950266");
+
+        venue.add("address", address);
+
+        final JsonObject model = new JsonObject();
+        model.add("venue", venue);
 
         return model;
     }
@@ -90,7 +100,8 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         Log.d(getLocalClassName(), "updateVenue");
 
-        service.updateVenue(eventsEntity.getVenue_id(), getVenusDetails())
+        service
+                .updateVenue(eventsEntity.getVenue_id(), getVenusDetails())
                 .enqueue(new WebService.CustomCallback<ResponseBody>() {
                     @Override
                     public void success(Response<ResponseBody> response) {
@@ -132,8 +143,30 @@ public class CreateNewEventActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         btnPublishEvent.setVisibility(View.VISIBLE);
                         eventsEntity = response.body();
+                        createTicket();
                     }
                 });
+    }
+
+    private void createTicket() {
+        service
+                .createTicket(eventsEntity.getId(), getTicketDetails())
+                .enqueue(new WebService.CustomCallback<ResponseBody>() {
+                    @Override
+                    public void success(Response<ResponseBody> response) {
+
+                    }
+                });
+    }
+
+    private JsonObject getTicketDetails() {
+        final JsonObject model = new JsonObject();
+        final JsonObject ticket = new JsonObject();
+        ticket.addProperty("name", "Free");
+        ticket.addProperty("free", Boolean.TRUE);
+        ticket.addProperty("quantity_total", 100);
+        model.add("ticket_class", ticket);
+        return model;
     }
 
     private JsonObject getEventDetails() {
@@ -154,6 +187,9 @@ public class CreateNewEventActivity extends AppCompatActivity {
         event.add("end", end);
         event.add("name", name);
         event.addProperty("currency", eventCurrency.getText().toString().trim());
+        if (null != eventsEntity) {
+            event.addProperty("venue_id", venueEntity.getId());
+        }
 
         final JsonObject model = new JsonObject();
         model.add("event", event);
