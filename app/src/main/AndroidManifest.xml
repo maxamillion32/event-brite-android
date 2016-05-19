@@ -19,9 +19,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.EventListActivity"/>
+        <activity android:name=".activity.EventListActivity"
+                  android:label="Your Events"
+                  android:theme="@style/Theme.NoActionBar"/>
         <activity android:name=".activity.CreateNewEventActivity"/>
-        <activity android:name=".activity.SearchEventActivity"/>
+        <activity android:name=".activity.SearchEventActivity" android:label="Search by name"/>
     </application>
 
 </manifest>

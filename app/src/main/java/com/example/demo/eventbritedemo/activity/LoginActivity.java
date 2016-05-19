@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ViewFlipper;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.AuthResponseModel;
@@ -15,9 +16,10 @@ import com.example.demo.eventbritedemo.utility.Constants;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Constants.ViewFlipperConstants {
 
     private static final String REDIRECT_URI = "localhost";
     private static final String APP_KEY = "IOLSNXK2AFZLT7SHSA";
@@ -26,11 +28,13 @@ public class LoginActivity extends AppCompatActivity {
     private static final String OAUTH_URL = "https://www.eventbrite.com/oauth/authorize?" +
             "response_type=code&client_id=" + APP_KEY;
     private String ACCESS_CODE;
+    private ViewFlipper viewFlipper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
     }
 
     @Override
@@ -50,6 +54,12 @@ public class LoginActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                viewFlipper.setDisplayedChild(SUCCESS);
+            }
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(getClass().getSimpleName(), "url is @@ " + url);
                 if (url.contains(REDIRECT_URI)) {
@@ -65,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void authorizeUser() {
+        viewFlipper.setDisplayedChild(LOADING);
         final WebService.ApiCallMethods service = WebService.createRetrofitService
                 (WebService.ApiCallMethods.class, WebService.ApiCallMethods.OAUTH_ENDPOINT);
 
@@ -73,9 +84,14 @@ public class LoginActivity extends AppCompatActivity {
                 .enqueue(new WebService.CustomCallback<AuthResponseModel>() {
                     @Override
                     public void success(Response<AuthResponseModel> response) {
-                        SharedPreferenceManager.setAccessToken(response.body()
-                                .getAccess_token());
+                        SharedPreferenceManager.setAccessToken(response.body().getAccess_token());
                         getUserDetails();
+                    }
+
+                    @Override
+                    public void onFailure(Call<AuthResponseModel> call, Throwable t) {
+                        super.onFailure(call, t);
+                        viewFlipper.setDisplayedChild(ERROR);
                     }
                 });
     }
@@ -97,6 +113,12 @@ public class LoginActivity extends AppCompatActivity {
                         );
                         gotoEventListActivity();
                     }
+
+                    @Override
+                    public void onFailure(Call<UserDetailModel> call, Throwable t) {
+                        super.onFailure(call, t);
+                        viewFlipper.setDisplayedChild(ERROR);
+                    }
                 });
     }
 
@@ -104,5 +126,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(this, EventListActivity.class));
         finish();
     }
-
 }

@@ -3,14 +3,16 @@
     android:id="@+id/viewFlipper"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/loading_layout"/>
 
     <include layout="@layout/error_layout"/>
 
-    <WebView
-        android:id="@+id/webView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </ViewFlipper>

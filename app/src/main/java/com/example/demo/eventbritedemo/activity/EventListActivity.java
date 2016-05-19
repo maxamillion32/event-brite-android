@@ -4,22 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ViewFlipper;
 
 import com.example.demo.eventbritedemo.R;
-import com.example.demo.eventbritedemo.model.EventResponseModel;
-import com.example.demo.eventbritedemo.utility.Constants;
-import com.example.demo.eventbritedemo.webservice.WebService;
+import com.example.demo.eventbritedemo.adapter.EventPagerAdapter;
+import com.example.demo.eventbritedemo.fragment.CancelledEventListFragment;
+import com.example.demo.eventbritedemo.fragment.CompletedEventListFragment;
+import com.example.demo.eventbritedemo.fragment.EndedEventListFragment;
+import com.example.demo.eventbritedemo.fragment.LiveEventListFragment;
+import com.example.demo.eventbritedemo.fragment.StartedEventListFragment;
+import com.example.demo.eventbritedemo.model.PagerModel;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EventListActivity extends AppCompatActivity implements Constants.ViewFlipperConstants {
-    private ViewFlipper viewFlipper;
+public class EventListActivity extends AppCompatActivity {
+
+    private ViewPager viewpager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +36,8 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
     }
 
     private void initViews() {
-        viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         final FloatingActionButton btnCreateEvent =
                 (FloatingActionButton) findViewById(R.id.btnCreateEvent);
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
@@ -38,12 +46,41 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
                 startActivity(new Intent(EventListActivity.this, CreateNewEventActivity.class));
             }
         });
+
+        viewpager = (ViewPager) findViewById(R.id.viewpager);
+        viewpager.setAdapter(getPagerAdapter());
+        viewpager.setOffscreenPageLimit(viewpager.getAdapter().getCount() - 1);
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int
+                    positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ((EventPagerAdapter) viewpager.getAdapter()).getItem(position)
+                        .onPageSelected(viewpager.getAdapter(), position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        final TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewpager);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getEventList();
+    private EventPagerAdapter getPagerAdapter() {
+        final List<PagerModel> list = new ArrayList<>();
+        list.add(new PagerModel(new LiveEventListFragment(), "Live"));
+        list.add(new PagerModel(new StartedEventListFragment(), "Started"));
+        list.add(new PagerModel(new CompletedEventListFragment(), "Completed"));
+        list.add(new PagerModel(new EndedEventListFragment(), "Ended"));
+        list.add(new PagerModel(new CancelledEventListFragment(), "Cancelled"));
+        return new EventPagerAdapter(getFragmentManager(), list);
     }
 
     @Override
@@ -60,29 +97,5 @@ public class EventListActivity extends AppCompatActivity implements Constants.Vi
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void getEventList() {
-        viewFlipper.setDisplayedChild(LOADING);
-        final WebService.ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
-                (WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
-
-        retrofitService.getOwnedEventListWithStatus("live")
-                .enqueue(new WebService.CustomCallback<EventResponseModel>() {
-
-                    @Override
-                    public void success(Response<EventResponseModel> response) {
-                        displayEventList(response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<EventResponseModel> call, Throwable t) {
-                        viewFlipper.setDisplayedChild(ERROR);
-                    }
-                });
-    }
-
-    private void displayEventList(EventResponseModel body) {
-        viewFlipper.setDisplayedChild(SUCCESS);
     }
 }
