@@ -15,6 +15,8 @@ import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.adapter.EventListAdapter;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.utility.Constants;
+import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
+import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
 import retrofit2.Call;
@@ -51,11 +53,11 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
 
     private void getEventList() {
         viewFlipper.setDisplayedChild(LOADING);
-        final WebService.ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
-                (WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
+        final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
+                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
 
         retrofitService.getOwnedEventListWithStatus(getEventType())
-                .enqueue(new WebService.CustomCallback<EventResponseModel>() {
+                .enqueue(new CustomCallback<EventResponseModel>() {
 
                     @Override
                     public void success(Response<EventResponseModel> response) {

@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.VenueModel;
+import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
+import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
@@ -27,7 +29,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private EventResponseModel.EventsEntity eventsEntity;
     private VenueModel venueEntity;
     private Button venue;
-    private WebService.ApiCallMethods service;
+    private ApiCallMethods service;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,8 +37,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_event);
         initViews();
         service = WebService.createServiceWithOauthHeader(
-                WebService.ApiCallMethods.class,
-                WebService.ApiCallMethods.SERVICE_ENDPOINT);
+                ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
     }
 
     private void initViews() {
@@ -71,7 +72,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private void createVenue() {
         service
                 .createVenue(getVenueDetails())
-                .enqueue(new WebService.CustomCallback<VenueModel>() {
+                .enqueue(new CustomCallback<VenueModel>() {
                     @Override
                     public void success(Response<VenueModel> response) {
                         venueEntity = response.body();
@@ -102,7 +103,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         service
                 .updateVenue(eventsEntity.getVenue_id(), getVenusDetails())
-                .enqueue(new WebService.CustomCallback<ResponseBody>() {
+                .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
                     public void success(Response<ResponseBody> response) {
 
@@ -124,7 +125,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         service
                 .publishEvent(eventsEntity.getId())
-                .enqueue(new WebService.CustomCallback<ResponseBody>() {
+                .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
                     public void success(Response<ResponseBody> response) {
 
@@ -136,7 +137,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         service
                 .createNewEvent(getEventDetails())
-                .enqueue(new WebService.CustomCallback<EventResponseModel.EventsEntity>() {
+                .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void success(Response<EventResponseModel.EventsEntity> response) {
                         Toast.makeText(getBaseContext(), "Event Added Successfully",
@@ -151,7 +152,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private void createTicket() {
         service
                 .createTicket(eventsEntity.getId(), getTicketDetails())
-                .enqueue(new WebService.CustomCallback<ResponseBody>() {
+                .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
                     public void success(Response<ResponseBody> response) {
 

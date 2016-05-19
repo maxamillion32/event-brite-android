@@ -14,6 +14,8 @@ import com.example.demo.eventbritedemo.model.AuthResponseModel;
 import com.example.demo.eventbritedemo.model.UserDetailModel;
 import com.example.demo.eventbritedemo.utility.Constants;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
+import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
+import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
 import retrofit2.Call;
@@ -76,12 +78,12 @@ public class LoginActivity extends AppCompatActivity implements Constants.ViewFl
 
     private void authorizeUser() {
         viewFlipper.setDisplayedChild(LOADING);
-        final WebService.ApiCallMethods service = WebService.createRetrofitService
-                (WebService.ApiCallMethods.class, WebService.ApiCallMethods.OAUTH_ENDPOINT);
+        final ApiCallMethods service = WebService.createRetrofitService
+                (ApiCallMethods.class, ApiCallMethods.OAUTH_ENDPOINT);
 
         service
                 .getAccessToken(ACCESS_CODE, CLIENT_SECRET, APP_KEY, "authorization_code")
-                .enqueue(new WebService.CustomCallback<AuthResponseModel>() {
+                .enqueue(new CustomCallback<AuthResponseModel>() {
                     @Override
                     public void success(Response<AuthResponseModel> response) {
                         SharedPreferenceManager.setAccessToken(response.body().getAccess_token());
@@ -98,12 +100,12 @@ public class LoginActivity extends AppCompatActivity implements Constants.ViewFl
 
     private void getUserDetails() {
 
-        final WebService.ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
-                (WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
+        final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
+                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
 
         retrofitService
                 .getUserDetails()
-                .enqueue(new WebService.CustomCallback<UserDetailModel>() {
+                .enqueue(new CustomCallback<UserDetailModel>() {
 
                     @Override
                     public void success(Response<UserDetailModel> response) {

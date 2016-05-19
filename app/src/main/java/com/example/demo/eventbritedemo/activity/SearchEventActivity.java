@@ -12,6 +12,8 @@ import android.widget.EditText;
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.adapter.EventListAdapter;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
+import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
+import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.List;
 import retrofit2.Response;
 
 public class SearchEventActivity extends AppCompatActivity {
-    private WebService.ApiCallMethods service;
+    private ApiCallMethods service;
     private RecyclerView recyclerView;
     private EventListAdapter adapter;
     private List<EventResponseModel.EventsEntity> eventsEntityList;
@@ -57,11 +59,11 @@ public class SearchEventActivity extends AppCompatActivity {
     private void searchEventWithName(String name) {
         if (null == service) {
             service = WebService.createServiceWithOauthHeader(
-                    WebService.ApiCallMethods.class, WebService.ApiCallMethods.SERVICE_ENDPOINT);
+                    ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
         }
         service
                 .searchEventWith(name)
-                .enqueue(new WebService.CustomCallback<EventResponseModel>() {
+                .enqueue(new CustomCallback<EventResponseModel>() {
                     @Override
                     public void success(Response<EventResponseModel> response) {
                         displayList(response.body());

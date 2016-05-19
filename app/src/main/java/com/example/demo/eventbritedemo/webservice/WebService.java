@@ -1,16 +1,8 @@
 package com.example.demo.eventbritedemo.webservice;
 
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
-import com.example.demo.eventbritedemo.ApplicationClass;
-import com.example.demo.eventbritedemo.model.AuthResponseModel;
-import com.example.demo.eventbritedemo.model.EventResponseModel;
-import com.example.demo.eventbritedemo.model.UserDetailModel;
-import com.example.demo.eventbritedemo.model.VenueModel;
 import com.example.demo.eventbritedemo.utility.SharedPreferenceManager;
-import com.example.demo.eventbritedemo.utility.Validation;
-import com.google.gson.JsonObject;
 
 import java.io.IOException;
 
@@ -18,19 +10,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public class WebService {
 
@@ -110,71 +92,5 @@ public class WebService {
                 return chain.proceed(request);
             }
         };
-    }
-
-    /**
-     * callback methods with least validation
-     *
-     * @param <T>
-     */
-    public static abstract class CustomCallback<T> implements Callback<T> {
-
-        @Override
-        public void onResponse(Call<T> call, retrofit2.Response<T> response) {
-            if (Validation.isValidResponse(response)) {
-                success(response);
-            } else {
-                onFailure(call, null);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<T> call, Throwable t) {
-            Toast.makeText(ApplicationClass.getInstance(), "ERROR!!!!!", Toast.LENGTH_LONG).show();
-        }
-
-        public abstract void success(retrofit2.Response<T> response);
-    }
-
-    public interface ApiCallMethods {
-        String OAUTH_ENDPOINT = "https://www.eventbrite.com/";
-        String SERVICE_ENDPOINT = "https://www.eventbriteapi.com/";
-
-        @FormUrlEncoded
-        @POST("oauth/token")
-        Call<AuthResponseModel> getAccessToken(@Field("code") String code,
-                                               @Field("client_secret") String client_secret,
-                                               @Field("client_id") String client_id,
-                                               @Field("grant_type") String grant_type);
-
-        @GET("v3/events/search/")
-        Call<EventResponseModel> getEventListForId(@Query("user.id") String userId);
-
-        @GET("v3/users/me/owned_events/")
-        Call<EventResponseModel> getOwnedEventList();
-
-        @GET("v3/users/me/owned_events/")
-        Call<EventResponseModel> getOwnedEventListWithStatus(@Query("status") String status);
-
-        @GET("v3/users/me/")
-        Call<UserDetailModel> getUserDetails();
-
-        @POST("v3/events/?expand=ticket_classes")
-        Call<EventResponseModel.EventsEntity> createNewEvent(@Body JsonObject model);
-
-        @POST("v3/events/{id}/publish/")
-        Call<ResponseBody> publishEvent(@Path("id") String id);
-
-        @POST("v3/venues/{id}/")
-        Call<ResponseBody> updateVenue(@Path("id") String id, @Body JsonObject body);
-
-        @POST("v3/venues/")
-        Call<VenueModel> createVenue(@Body JsonObject body);
-
-        @POST("v3/events/{id}/ticket_classes/")
-        Call<ResponseBody> createTicket(@Path("id") String id, @Body JsonObject body);
-
-        @GET("v3/events/search/")
-        Call<EventResponseModel> searchEventWith(@Query("q") String stringVal);
     }
 }
