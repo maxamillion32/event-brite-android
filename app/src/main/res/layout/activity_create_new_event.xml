@@ -8,12 +8,16 @@
     <EditText
         android:id="@+id/eventName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <EditText
         android:id="@+id/eventCurrency"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <Button
         android:id="@+id/btnCreateEvent"

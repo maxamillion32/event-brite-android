@@ -12,10 +12,13 @@ import android.widget.Toast;
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.VenueModel;
+import com.example.demo.eventbritedemo.utility.Util;
 import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
 import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
+
+import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -173,12 +176,13 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private JsonObject getEventDetails() {
 
         final JsonObject start = new JsonObject();
-        start.addProperty("timezone", "Pacific/Honolulu");
-        start.addProperty("utc", "2016-06-21T14:30:00Z");
+        final TimeZone timeZone = TimeZone.getDefault();
+        start.addProperty("timezone", timeZone.getID());
+        start.addProperty("utc", Util.getFormattedDate());
 
         final JsonObject end = new JsonObject();
-        end.addProperty("timezone", "Pacific/Honolulu");
-        end.addProperty("utc", "2016-06-27T14:30:00Z");
+        end.addProperty("timezone", timeZone.getID());
+        end.addProperty("utc", Util.getFormattedDate());
 
         final JsonObject name = new JsonObject();
         name.addProperty("html", eventName.getText().toString().trim());
