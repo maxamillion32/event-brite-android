@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements Constants.ViewFl
                 .getAccessToken(ACCESS_CODE, CLIENT_SECRET, APP_KEY, "authorization_code")
                 .enqueue(new CustomCallback<AuthResponseModel>() {
                     @Override
-                    public void success(Response<AuthResponseModel> response) {
+                    public void onSuccess(Response<AuthResponseModel> response) {
                         SharedPreferenceManager.setAccessToken(response.body().getAccess_token());
                         getUserDetails();
                     }
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements Constants.ViewFl
                 .enqueue(new CustomCallback<UserDetailModel>() {
 
                     @Override
-                    public void success(Response<UserDetailModel> response) {
+                    public void onSuccess(Response<UserDetailModel> response) {
                         SharedPreferenceManager.setStringValue(
                                 Constants.SharedPreferencesKeys.USER_ID,
                                 response.body().getId()

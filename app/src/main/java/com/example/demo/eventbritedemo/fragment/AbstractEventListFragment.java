@@ -60,7 +60,7 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
                 .enqueue(new CustomCallback<EventResponseModel>() {
 
                     @Override
-                    public void success(Response<EventResponseModel> response) {
+                    public void onSuccess(Response<EventResponseModel> response) {
                         displayEventList(response.body());
                     }
 

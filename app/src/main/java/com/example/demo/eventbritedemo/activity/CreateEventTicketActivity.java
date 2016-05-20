@@ -64,7 +64,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
                 .createTicket(eventsEntity.getId(), getTicketDetails())
                 .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
-                    public void success(Response<ResponseBody> response) {
+                    public void onSuccess(Response<ResponseBody> response) {
                         btnPublishEvent.setVisibility(View.VISIBLE);
                     }
                 });
@@ -88,7 +88,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
                 .publishEvent(eventsEntity.getId())
                 .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
-                    public void success(Response<ResponseBody> response) {
+                    public void onSuccess(Response<ResponseBody> response) {
                         Utility.showToast("Event now Live");
                         finish();
                     }

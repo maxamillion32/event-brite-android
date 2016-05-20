@@ -16,7 +16,7 @@ public abstract class CustomCallback<T> implements Callback<T> {
     @Override
     public void onResponse(Call<T> call, retrofit2.Response<T> response) {
         if (Validation.isValidResponse(response)) {
-            success(response);
+            onSuccess(response);
         } else {
             onFailure(call, null);
         }
@@ -27,5 +27,5 @@ public abstract class CustomCallback<T> implements Callback<T> {
         Utility.showToast("ERROR!!!!!");
     }
 
-    public abstract void success(retrofit2.Response<T> response);
+    public abstract void onSuccess(retrofit2.Response<T> response);
 }

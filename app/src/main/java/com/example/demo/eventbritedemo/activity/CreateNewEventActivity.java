@@ -88,7 +88,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 .createVenue(getVenueDetails())
                 .enqueue(new CustomCallback<VenueModel>() {
                     @Override
-                    public void success(Response<VenueModel> response) {
+                    public void onSuccess(Response<VenueModel> response) {
                         venueEntity = response.body();
                     }
                 });
@@ -119,7 +119,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 .updateVenue(eventsEntity.getVenue_id(), getVenusDetails())
                 .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
-                    public void success(Response<ResponseBody> response) {
+                    public void onSuccess(Response<ResponseBody> response) {
 
                     }
                 });
@@ -141,7 +141,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 .createNewEvent(getEventDetails())
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
-                    public void success(Response<EventResponseModel.EventsEntity> response) {
+                    public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
                         Utility.showToast("Event Added Successfully");
 
                         gotoCreateEventTicketActivity(response.body());

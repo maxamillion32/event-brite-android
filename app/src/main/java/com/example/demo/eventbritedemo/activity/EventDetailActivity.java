@@ -79,7 +79,7 @@ public class EventDetailActivity extends AppCompatActivity implements
                 .getEventWithId(eventId)
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
-                    public void success(Response<EventResponseModel.EventsEntity> response) {
+                    public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
                         eventEntity = response.body();
                         displayEventDetails();
                     }

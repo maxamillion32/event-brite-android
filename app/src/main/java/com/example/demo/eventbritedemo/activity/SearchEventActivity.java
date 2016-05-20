@@ -19,6 +19,7 @@ import com.example.demo.eventbritedemo.webservice.WebService;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
 public class SearchEventActivity extends AppCompatActivity {
@@ -26,6 +27,7 @@ public class SearchEventActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private EventListAdapter adapter;
     private List<EventResponseModel.EventsEntity> eventsEntityList;
+    private Call<EventResponseModel> apiCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,14 +63,20 @@ public class SearchEventActivity extends AppCompatActivity {
             service = WebService.createServiceWithOauthHeader(
                     ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
         }
-        service
-                .searchEventWith(name)
-                .enqueue(new CustomCallback<EventResponseModel>() {
-                    @Override
-                    public void success(Response<EventResponseModel> response) {
-                        displayList(response.body());
-                    }
-                });
+        if (null != apiCall) {
+            apiCall.cancel();
+        }
+        apiCall = service.searchEventWith(name);
+        apiCall.enqueue(new CustomCallback<EventResponseModel>() {
+            @Override
+            public void onSuccess(Response<EventResponseModel> response) {
+                displayList(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<EventResponseModel> call, Throwable t) {
+            }
+        });
     }
 
     private void displayList(EventResponseModel response) {
