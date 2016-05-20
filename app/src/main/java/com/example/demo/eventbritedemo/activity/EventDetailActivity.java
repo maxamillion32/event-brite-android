@@ -1,6 +1,7 @@
 package com.example.demo.eventbritedemo.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -66,6 +67,15 @@ public class EventDetailActivity extends AppCompatActivity implements
             }
         });
 
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(eventEntity.getUrl()));
+                startActivity(intent);
+            }
+        });
+
         getEventDetailsFor(eventId);
     }
 
@@ -95,8 +105,8 @@ public class EventDetailActivity extends AppCompatActivity implements
     private void displayEventDetails() {
         viewFlipper.setDisplayedChild(SUCCESS);
         eventName.setText(eventEntity.getName().getHtml());
-        eventDate.setText(eventEntity.getStart().toString() + " to " +
-                eventEntity.getEnd().toString());
+        eventDate.setText(eventEntity.getStart() + " to " +
+                eventEntity.getEnd());
         final List<TicketModel> ticket_classes = eventEntity.getTicket_classes();
         if (null == ticket_classes || ticket_classes.isEmpty()) {
             btnRegister.setVisibility(View.GONE);

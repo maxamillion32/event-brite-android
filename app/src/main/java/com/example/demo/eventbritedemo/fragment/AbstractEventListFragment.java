@@ -28,6 +28,7 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
     private View mView;
     private RecyclerView recyclerView;
     private ViewFlipper viewFlipper;
+    private Call<EventResponseModel> apiCall;
 
     @Nullable
     @Override
@@ -53,22 +54,25 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
 
     private void getEventList() {
         viewFlipper.setDisplayedChild(LOADING);
-        final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
-                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+        if (null == apiCall) {
+            final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
+                    (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+            apiCall = retrofitService.getOwnedEventListWithStatus(getEventType());
+        }
+        apiCall.cancel();
+        apiCall = apiCall.clone();
+        apiCall.enqueue(new CustomCallback<EventResponseModel>() {
 
-        retrofitService.getOwnedEventListWithStatus(getEventType())
-                .enqueue(new CustomCallback<EventResponseModel>() {
+            @Override
+            public void onSuccess(Response<EventResponseModel> response) {
+                displayEventList(response.body());
+            }
 
-                    @Override
-                    public void onSuccess(Response<EventResponseModel> response) {
-                        displayEventList(response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<EventResponseModel> call, Throwable t) {
-                        viewFlipper.setDisplayedChild(ERROR);
-                    }
-                });
+            @Override
+            public void onFailure(Call<EventResponseModel> call, Throwable t) {
+                viewFlipper.setDisplayedChild(ERROR);
+            }
+        });
     }
 
     @NonNull
@@ -77,6 +81,14 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
     private void displayEventList(EventResponseModel body) {
         viewFlipper.setDisplayedChild(SUCCESS);
         recyclerView.setAdapter(new EventListAdapter(getActivity(), body.getEvents()));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (null != apiCall) {
+            apiCall.cancel();
+        }
     }
 
     @Override
