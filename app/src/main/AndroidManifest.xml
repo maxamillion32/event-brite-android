@@ -18,13 +18,22 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".activity.EventListActivity"
-                  android:label="Your Events"
-                  android:theme="@style/Theme.NoActionBar"/>
-        <activity android:name=".activity.CreateNewEventActivity" android:label="Create Event"/>
-        <activity android:name=".activity.SearchEventActivity" android:label="Search by name"/>
-        <activity android:name=".activity.CreateEventTicketActivity" android:label="Add Ticket"/>
+        <activity
+            android:name=".activity.EventListActivity"
+            android:label="Your Events"
+            android:theme="@style/Theme.NoActionBar"/>
+        <activity
+            android:name=".activity.CreateNewEventActivity"
+            android:label="Create Event"/>
+        <activity
+            android:name=".activity.SearchEventActivity"
+            android:label="Search by name"/>
+        <activity
+            android:name=".activity.CreateEventTicketActivity"
+            android:label="Add Ticket"/>
+        <activity
+            android:name=".activity.EventDetailActivity"
+            android:label="Event Detail"/>
     </application>
 
 </manifest>

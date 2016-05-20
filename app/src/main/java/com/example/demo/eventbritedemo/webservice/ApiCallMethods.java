@@ -56,4 +56,7 @@ public interface ApiCallMethods {
 
     @GET("v3/events/search/")
     Call<EventResponseModel> searchEventWith(@Query("q") String stringVal);
+
+    @GET("v3/events/{id}/?expand=ticket_classes")
+    Call<EventResponseModel.EventsEntity> getEventWithId(@Path("id") String eventId);
 }

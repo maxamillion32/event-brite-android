@@ -99,6 +99,16 @@ public class EventResponseModel {
         private String format_id;
         private String resource_uri;
 
+        public List<TicketModel> getTicket_classes() {
+            return ticket_classes;
+        }
+
+        public void setTicket_classes(List<TicketModel> ticket_classes) {
+            this.ticket_classes = ticket_classes;
+        }
+
+        private List<TicketModel> ticket_classes;
+
         private LogoEntity logo;
 
         public NameEntity getName() {
@@ -444,17 +454,18 @@ public class EventResponseModel {
                 this.html = in.readString();
             }
 
-            public static final Creator<DescriptionEntity> CREATOR = new Creator<DescriptionEntity>() {
-                @Override
-                public DescriptionEntity createFromParcel(Parcel source) {
-                    return new DescriptionEntity(source);
-                }
+            public static final Creator<DescriptionEntity> CREATOR = new
+                    Creator<DescriptionEntity>() {
+                        @Override
+                        public DescriptionEntity createFromParcel(Parcel source) {
+                            return new DescriptionEntity(source);
+                        }
 
-                @Override
-                public DescriptionEntity[] newArray(int size) {
-                    return new DescriptionEntity[size];
-                }
-            };
+                        @Override
+                        public DescriptionEntity[] newArray(int size) {
+                            return new DescriptionEntity[size];
+                        }
+                    };
         }
 
         public static class StartEntity implements Parcelable {
@@ -496,6 +507,11 @@ public class EventResponseModel {
 
             public void setUtc(String utc) {
                 this.utc = utc;
+            }
+
+            @Override
+            public String toString() {
+                return getUtc();
             }
 
             @Override
@@ -564,6 +580,11 @@ public class EventResponseModel {
 
             public void setUtc(String utc) {
                 this.utc = utc;
+            }
+
+            @Override
+            public String toString() {
+                return getUtc();
             }
 
             @Override
@@ -682,6 +703,9 @@ public class EventResponseModel {
             };
         }
 
+        public EventsEntity() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -719,10 +743,8 @@ public class EventResponseModel {
             dest.writeString(this.subcategory_id);
             dest.writeString(this.format_id);
             dest.writeString(this.resource_uri);
+            dest.writeTypedList(this.ticket_classes);
             dest.writeParcelable(this.logo, flags);
-        }
-
-        public EventsEntity() {
         }
 
         protected EventsEntity(Parcel in) {
@@ -753,13 +775,14 @@ public class EventResponseModel {
             this.organizer_id = in.readString();
             this.venue_id = in.readString();
             this.category_id = in.readString();
-            this.subcategory_id = in.readParcelable(Object.class.getClassLoader());
+            this.subcategory_id = in.readString();
             this.format_id = in.readString();
             this.resource_uri = in.readString();
+            this.ticket_classes = in.createTypedArrayList(TicketModel.CREATOR);
             this.logo = in.readParcelable(LogoEntity.class.getClassLoader());
         }
 
-        public static final Parcelable.Creator<EventsEntity> CREATOR = new Parcelable.Creator<EventsEntity>() {
+        public static final Creator<EventsEntity> CREATOR = new Creator<EventsEntity>() {
             @Override
             public EventsEntity createFromParcel(Parcel source) {
                 return new EventsEntity(source);
