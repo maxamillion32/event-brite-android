@@ -22,8 +22,9 @@
         <activity android:name=".activity.EventListActivity"
                   android:label="Your Events"
                   android:theme="@style/Theme.NoActionBar"/>
-        <activity android:name=".activity.CreateNewEventActivity"/>
+        <activity android:name=".activity.CreateNewEventActivity" android:label="Create Event"/>
         <activity android:name=".activity.SearchEventActivity" android:label="Search by name"/>
+        <activity android:name=".activity.CreateEventTicketActivity" android:label="Add Ticket"/>
     </application>
 
 </manifest>

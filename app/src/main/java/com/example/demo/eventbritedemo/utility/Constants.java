@@ -7,6 +7,10 @@ public final class Constants {
         public static final String ACCESS_TOKEN = "access_token";
     }
 
+    public static final class IntentKeys {
+        public static final String EVENT = "event";
+    }
+
     public interface ViewFlipperConstants {
         int LOADING = 0;
         int ERROR = 1;

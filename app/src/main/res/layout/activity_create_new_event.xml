@@ -9,14 +9,33 @@
         android:id="@+id/eventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Event Name"
         android:padding="15dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <Button
+        android:id="@+id/btnStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:padding="15dp"
+        android:text="Start Date"/>
+
+    <Button
+        android:id="@+id/btnEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:padding="15dp"
+        android:text="End Date"/>
 
     <EditText
         android:id="@+id/eventCurrency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
+        android:text="USD"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <Button
@@ -24,18 +43,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Create"/>
+        android:text="Create Event"/>
 
     <Button
         android:id="@+id/btnPublishEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Publish"/>
+        android:text="Publish"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/venue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="New Venue"/>
+        android:text="New Venue"
+        android:visibility="gone"/>
 </LinearLayout>

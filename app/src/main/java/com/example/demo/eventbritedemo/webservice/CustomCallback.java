@@ -1,8 +1,6 @@
 package com.example.demo.eventbritedemo.webservice;
 
-import android.widget.Toast;
-
-import com.example.demo.eventbritedemo.ApplicationClass;
+import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.utility.Validation;
 
 import retrofit2.Call;
@@ -26,7 +24,7 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        Toast.makeText(ApplicationClass.getInstance(), "ERROR!!!!!", Toast.LENGTH_LONG).show();
+        Utility.showToast("ERROR!!!!!");
     }
 
     public abstract void success(retrofit2.Response<T> response);

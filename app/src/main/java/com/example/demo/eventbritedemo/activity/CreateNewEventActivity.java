@@ -1,23 +1,28 @@
 package com.example.demo.eventbritedemo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TimePicker;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.VenueModel;
-import com.example.demo.eventbritedemo.utility.Util;
+import com.example.demo.eventbritedemo.utility.Constants;
+import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
 import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
+import java.util.Calendar;
 import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
@@ -28,11 +33,12 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private EditText eventName;
     private EditText eventCurrency;
     private Button btnCreateEvent;
-    private Button btnPublishEvent;
     private EventResponseModel.EventsEntity eventsEntity;
     private VenueModel venueEntity;
     private Button venue;
     private ApiCallMethods service;
+    private Button btnStartDate;
+    private Button btnEndDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +53,6 @@ public class CreateNewEventActivity extends AppCompatActivity {
         eventName = (EditText) findViewById(R.id.eventName);
         eventCurrency = (EditText) findViewById(R.id.eventCurrency);
         btnCreateEvent = (Button) findViewById(R.id.btnCreateEvent);
-        btnPublishEvent = (Button) findViewById(R.id.btnPublishEvent);
         venue = (Button) findViewById(R.id.venue);
 
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
@@ -57,19 +62,25 @@ public class CreateNewEventActivity extends AppCompatActivity {
             }
         });
 
-        btnPublishEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishEvent();
-            }
-        });
-
         venue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                createVenue();
             }
         });
+
+        btnStartDate = (Button) findViewById(R.id.btnStartDate);
+        btnEndDate = (Button) findViewById(R.id.btnEndDate);
+
+        final View.OnClickListener datePickerListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateTimePicker((Button) v);
+            }
+        };
+
+        btnStartDate.setOnClickListener(datePickerListener);
+        btnEndDate.setOnClickListener(datePickerListener);
     }
 
     private void createVenue() {
@@ -124,18 +135,6 @@ public class CreateNewEventActivity extends AppCompatActivity {
         return model;
     }
 
-    private void publishEvent() {
-
-        service
-                .publishEvent(eventsEntity.getId())
-                .enqueue(new CustomCallback<ResponseBody>() {
-                    @Override
-                    public void success(Response<ResponseBody> response) {
-
-                    }
-                });
-    }
-
     private void createNewEvent() {
 
         service
@@ -143,34 +142,18 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void success(Response<EventResponseModel.EventsEntity> response) {
-                        Toast.makeText(getBaseContext(), "Event Added Successfully",
-                                Toast.LENGTH_SHORT).show();
-                        btnPublishEvent.setVisibility(View.VISIBLE);
-                        eventsEntity = response.body();
-                        createTicket();
+                        Utility.showToast("Event Added Successfully");
+
+                        gotoCreateEventTicketActivity(response.body());
                     }
                 });
     }
 
-    private void createTicket() {
-        service
-                .createTicket(eventsEntity.getId(), getTicketDetails())
-                .enqueue(new CustomCallback<ResponseBody>() {
-                    @Override
-                    public void success(Response<ResponseBody> response) {
-
-                    }
-                });
-    }
-
-    private JsonObject getTicketDetails() {
-        final JsonObject model = new JsonObject();
-        final JsonObject ticket = new JsonObject();
-        ticket.addProperty("name", "Free");
-        ticket.addProperty("free", Boolean.TRUE);
-        ticket.addProperty("quantity_total", 100);
-        model.add("ticket_class", ticket);
-        return model;
+    private void gotoCreateEventTicketActivity(EventResponseModel.EventsEntity eventsEntity) {
+        final Intent intent = new Intent(this, CreateEventTicketActivity.class);
+        intent.putExtra(Constants.IntentKeys.EVENT, eventsEntity);
+        startActivity(intent);
+        finish();
     }
 
     private JsonObject getEventDetails() {
@@ -178,11 +161,11 @@ public class CreateNewEventActivity extends AppCompatActivity {
         final JsonObject start = new JsonObject();
         final TimeZone timeZone = TimeZone.getDefault();
         start.addProperty("timezone", timeZone.getID());
-        start.addProperty("utc", Util.getFormattedDate());
+        start.addProperty("utc", btnStartDate.getText().toString());
 
         final JsonObject end = new JsonObject();
         end.addProperty("timezone", timeZone.getID());
-        end.addProperty("utc", Util.getFormattedDate());
+        end.addProperty("utc", btnEndDate.getText().toString());
 
         final JsonObject name = new JsonObject();
         name.addProperty("html", eventName.getText().toString().trim());
@@ -200,5 +183,29 @@ public class CreateNewEventActivity extends AppCompatActivity {
         model.add("event", event);
 
         return model;
+    }
+
+    private void showDateTimePicker(final Button button) {
+        final View dialogView = View.inflate(this, R.layout.date_time_picker, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        dialogView.findViewById(R.id.btnSetDate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+                final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.timePicker);
+
+                final Calendar calendar = Calendar.getInstance();
+                calendar.set(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        timePicker.getCurrentHour(),
+                        timePicker.getCurrentMinute(), 0);
+                alertDialog.dismiss();
+                button.setText(Utility.getFormattedDate(calendar));
+            }
+        });
+        alertDialog.setView(dialogView);
+        alertDialog.show();
     }
 }

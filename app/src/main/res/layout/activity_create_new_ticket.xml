@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/ticketName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Ticket Name"
+        android:padding="15dp"/>
+
+    <EditText
+        android:id="@+id/totalTickets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Total Tickets"
+        android:inputType="number"
+        android:padding="15dp"
+        android:text="100"/>
+
+    <Button
+        android:id="@+id/btnCreateTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Ticket"/>
+
+    <Button
+        android:id="@+id/btnPublishEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Publish"
+        android:visibility="gone"/>
+
+</LinearLayout>

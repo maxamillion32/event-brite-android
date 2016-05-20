@@ -1,5 +1,8 @@
 package com.example.demo.eventbritedemo.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 public class EventResponseModel {
@@ -63,7 +66,7 @@ public class EventResponseModel {
         }
     }
 
-    public static class EventsEntity {
+    public static class EventsEntity implements Parcelable {
 
         private NameEntity name;
         private DescriptionEntity description;
@@ -92,7 +95,7 @@ public class EventResponseModel {
         private String organizer_id;
         private String venue_id;
         private String category_id;
-        private Object subcategory_id;
+        private String subcategory_id;
         private String format_id;
         private String resource_uri;
 
@@ -314,11 +317,11 @@ public class EventResponseModel {
             this.category_id = category_id;
         }
 
-        public Object getSubcategory_id() {
+        public String getSubcategory_id() {
             return subcategory_id;
         }
 
-        public void setSubcategory_id(Object subcategory_id) {
+        public void setSubcategory_id(String subcategory_id) {
             this.subcategory_id = subcategory_id;
         }
 
@@ -346,7 +349,7 @@ public class EventResponseModel {
             this.logo = logo;
         }
 
-        public static class NameEntity {
+        public static class NameEntity implements Parcelable {
             private String text;
             private String html;
 
@@ -372,9 +375,37 @@ public class EventResponseModel {
             public void setHtml(String html) {
                 this.html = html;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.text);
+                dest.writeString(this.html);
+            }
+
+            protected NameEntity(Parcel in) {
+                this.text = in.readString();
+                this.html = in.readString();
+            }
+
+            public static final Creator<NameEntity> CREATOR = new Creator<NameEntity>() {
+                @Override
+                public NameEntity createFromParcel(Parcel source) {
+                    return new NameEntity(source);
+                }
+
+                @Override
+                public NameEntity[] newArray(int size) {
+                    return new NameEntity[size];
+                }
+            };
         }
 
-        public static class DescriptionEntity {
+        public static class DescriptionEntity implements Parcelable {
             private String text;
             private String html;
 
@@ -393,9 +424,40 @@ public class EventResponseModel {
             public void setHtml(String html) {
                 this.html = html;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.text);
+                dest.writeString(this.html);
+            }
+
+            public DescriptionEntity() {
+            }
+
+            protected DescriptionEntity(Parcel in) {
+                this.text = in.readString();
+                this.html = in.readString();
+            }
+
+            public static final Creator<DescriptionEntity> CREATOR = new Creator<DescriptionEntity>() {
+                @Override
+                public DescriptionEntity createFromParcel(Parcel source) {
+                    return new DescriptionEntity(source);
+                }
+
+                @Override
+                public DescriptionEntity[] newArray(int size) {
+                    return new DescriptionEntity[size];
+                }
+            };
         }
 
-        public static class StartEntity {
+        public static class StartEntity implements Parcelable {
             private String timezone;
             private String local;
             private String utc;
@@ -435,9 +497,39 @@ public class EventResponseModel {
             public void setUtc(String utc) {
                 this.utc = utc;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.timezone);
+                dest.writeString(this.local);
+                dest.writeString(this.utc);
+            }
+
+            protected StartEntity(Parcel in) {
+                this.timezone = in.readString();
+                this.local = in.readString();
+                this.utc = in.readString();
+            }
+
+            public static final Creator<StartEntity> CREATOR = new Creator<StartEntity>() {
+                @Override
+                public StartEntity createFromParcel(Parcel source) {
+                    return new StartEntity(source);
+                }
+
+                @Override
+                public StartEntity[] newArray(int size) {
+                    return new StartEntity[size];
+                }
+            };
         }
 
-        public static class EndEntity {
+        public static class EndEntity implements Parcelable {
             private String timezone;
             private String local;
             private String utc;
@@ -473,9 +565,39 @@ public class EventResponseModel {
             public void setUtc(String utc) {
                 this.utc = utc;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.timezone);
+                dest.writeString(this.local);
+                dest.writeString(this.utc);
+            }
+
+            protected EndEntity(Parcel in) {
+                this.timezone = in.readString();
+                this.local = in.readString();
+                this.utc = in.readString();
+            }
+
+            public static final Creator<EndEntity> CREATOR = new Creator<EndEntity>() {
+                @Override
+                public EndEntity createFromParcel(Parcel source) {
+                    return new EndEntity(source);
+                }
+
+                @Override
+                public EndEntity[] newArray(int size) {
+                    return new EndEntity[size];
+                }
+            };
         }
 
-        public static class LogoEntity {
+        public static class LogoEntity implements Parcelable {
             private String id;
             private String url;
             private String aspect_ratio;
@@ -521,6 +643,132 @@ public class EventResponseModel {
             public void setEdge_color_set(boolean edge_color_set) {
                 this.edge_color_set = edge_color_set;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.id);
+                dest.writeString(this.url);
+                dest.writeString(this.aspect_ratio);
+                dest.writeString(this.edge_color);
+                dest.writeByte(this.edge_color_set ? (byte) 1 : (byte) 0);
+            }
+
+            public LogoEntity() {
+            }
+
+            protected LogoEntity(Parcel in) {
+                this.id = in.readString();
+                this.url = in.readString();
+                this.aspect_ratio = in.readString();
+                this.edge_color = in.readString();
+                this.edge_color_set = in.readByte() != 0;
+            }
+
+            public static final Creator<LogoEntity> CREATOR = new Creator<LogoEntity>() {
+                @Override
+                public LogoEntity createFromParcel(Parcel source) {
+                    return new LogoEntity(source);
+                }
+
+                @Override
+                public LogoEntity[] newArray(int size) {
+                    return new LogoEntity[size];
+                }
+            };
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.name, flags);
+            dest.writeParcelable(this.description, flags);
+            dest.writeString(this.id);
+            dest.writeString(this.url);
+            dest.writeString(this.vanity_url);
+            dest.writeParcelable(this.start, flags);
+            dest.writeParcelable(this.end, flags);
+            dest.writeString(this.created);
+            dest.writeString(this.changed);
+            dest.writeInt(this.capacity);
+            dest.writeString(this.status);
+            dest.writeString(this.currency);
+            dest.writeByte(this.listed ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.shareable ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.online_event ? (byte) 1 : (byte) 0);
+            dest.writeInt(this.tx_time_limit);
+            dest.writeByte(this.hide_start_date ? (byte) 1 : (byte) 0);
+            dest.writeString(this.locale);
+            dest.writeByte(this.is_locked ? (byte) 1 : (byte) 0);
+            dest.writeString(this.privacy_setting);
+            dest.writeByte(this.is_series ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.is_series_parent ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.is_reserved_seating ? (byte) 1 : (byte) 0);
+            dest.writeString(this.logo_id);
+            dest.writeString(this.organizer_id);
+            dest.writeString(this.venue_id);
+            dest.writeString(this.category_id);
+            dest.writeString(this.subcategory_id);
+            dest.writeString(this.format_id);
+            dest.writeString(this.resource_uri);
+            dest.writeParcelable(this.logo, flags);
+        }
+
+        public EventsEntity() {
+        }
+
+        protected EventsEntity(Parcel in) {
+            this.name = in.readParcelable(NameEntity.class.getClassLoader());
+            this.description = in.readParcelable(DescriptionEntity.class.getClassLoader());
+            this.id = in.readString();
+            this.url = in.readString();
+            this.vanity_url = in.readString();
+            this.start = in.readParcelable(StartEntity.class.getClassLoader());
+            this.end = in.readParcelable(EndEntity.class.getClassLoader());
+            this.created = in.readString();
+            this.changed = in.readString();
+            this.capacity = in.readInt();
+            this.status = in.readString();
+            this.currency = in.readString();
+            this.listed = in.readByte() != 0;
+            this.shareable = in.readByte() != 0;
+            this.online_event = in.readByte() != 0;
+            this.tx_time_limit = in.readInt();
+            this.hide_start_date = in.readByte() != 0;
+            this.locale = in.readString();
+            this.is_locked = in.readByte() != 0;
+            this.privacy_setting = in.readString();
+            this.is_series = in.readByte() != 0;
+            this.is_series_parent = in.readByte() != 0;
+            this.is_reserved_seating = in.readByte() != 0;
+            this.logo_id = in.readString();
+            this.organizer_id = in.readString();
+            this.venue_id = in.readString();
+            this.category_id = in.readString();
+            this.subcategory_id = in.readParcelable(Object.class.getClassLoader());
+            this.format_id = in.readString();
+            this.resource_uri = in.readString();
+            this.logo = in.readParcelable(LogoEntity.class.getClassLoader());
+        }
+
+        public static final Parcelable.Creator<EventsEntity> CREATOR = new Parcelable.Creator<EventsEntity>() {
+            @Override
+            public EventsEntity createFromParcel(Parcel source) {
+                return new EventsEntity(source);
+            }
+
+            @Override
+            public EventsEntity[] newArray(int size) {
+                return new EventsEntity[size];
+            }
+        };
     }
 }
