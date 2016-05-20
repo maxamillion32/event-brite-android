@@ -14,8 +14,6 @@ import android.view.View;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.adapter.EventPagerAdapter;
-import com.example.demo.eventbritedemo.fragment.CancelledEventListFragment;
-import com.example.demo.eventbritedemo.fragment.CompletedEventListFragment;
 import com.example.demo.eventbritedemo.fragment.EndedEventListFragment;
 import com.example.demo.eventbritedemo.fragment.LiveEventListFragment;
 import com.example.demo.eventbritedemo.fragment.SavedEventListFragment;
@@ -79,9 +77,7 @@ public class EventListActivity extends AppCompatActivity {
         list.add(new PagerModel(new LiveEventListFragment(), "Live"));
         list.add(new PagerModel(new StartedEventListFragment(), "Started"));
         list.add(new PagerModel(new SavedEventListFragment(), "Saved"));
-        list.add(new PagerModel(new CompletedEventListFragment(), "Completed"));
         list.add(new PagerModel(new EndedEventListFragment(), "Ended"));
-        list.add(new PagerModel(new CancelledEventListFragment(), "Cancelled"));
         return new EventPagerAdapter(getFragmentManager(), list);
     }
 
