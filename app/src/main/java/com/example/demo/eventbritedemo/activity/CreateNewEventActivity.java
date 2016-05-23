@@ -99,8 +99,13 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
-                        Utility.showToast("Event Added Successfully");
+                        Utility.showToast("Event Created Successfully");
                         gotoCreateEventTicketActivity(response.body());
+                    }
+
+                    @Override
+                    public boolean showLoader() {
+                        return true;
                     }
                 });
     }

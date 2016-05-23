@@ -68,6 +68,12 @@ public class CreateEventTicketActivity extends AppCompatActivity {
                     public void onSuccess(Response<ResponseBody> response) {
                         btnPublishEvent.setVisibility(View.VISIBLE);
                         btnCreateTicket.setVisibility(View.GONE);
+                        Utility.showToast("Ticket created for Event. Publish it to go Live");
+                    }
+
+                    @Override
+                    public boolean showLoader() {
+                        return true;
                     }
                 });
     }
@@ -91,8 +97,13 @@ public class CreateEventTicketActivity extends AppCompatActivity {
                 .enqueue(new CustomCallback<ResponseBody>() {
                     @Override
                     public void onSuccess(Response<ResponseBody> response) {
-                        Utility.showToast("Event now Live");
+                        Utility.showToast("Event is now Live");
                         finish();
+                    }
+
+                    @Override
+                    public boolean showLoader() {
+                        return true;
                     }
                 });
     }

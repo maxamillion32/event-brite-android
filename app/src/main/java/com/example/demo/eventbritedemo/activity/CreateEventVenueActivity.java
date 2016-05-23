@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.VenueModel;
 import com.example.demo.eventbritedemo.utility.Constants;
+import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
 import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
@@ -47,7 +48,13 @@ public class CreateEventVenueActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Response<VenueModel> response) {
                                 venueEntity = response.body();
+                                Utility.showToast("Venue created successfully");
                                 finish();
+                            }
+
+                            @Override
+                            public boolean showLoader() {
+                                return true;
                             }
                         });
             }

@@ -18,4 +18,8 @@ public final class Constants {
         int ERROR = 1;
         int SUCCESS = 2;
     }
+
+    public static final class Date {
+        public static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    }
 }

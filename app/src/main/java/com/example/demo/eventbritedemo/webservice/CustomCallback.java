@@ -13,6 +13,12 @@ import retrofit2.Callback;
  */
 public abstract class CustomCallback<T> implements Callback<T> {
 
+    public CustomCallback() {
+        if (showLoader()) {
+            Utility.showToastLong("Loading");
+        }
+    }
+
     @Override
     public void onResponse(Call<T> call, retrofit2.Response<T> response) {
         if (Validation.isValidResponse(response)) {
@@ -28,4 +34,8 @@ public abstract class CustomCallback<T> implements Callback<T> {
     }
 
     public abstract void onSuccess(retrofit2.Response<T> response);
+
+    public boolean showLoader() {
+        return false;
+    }
 }
