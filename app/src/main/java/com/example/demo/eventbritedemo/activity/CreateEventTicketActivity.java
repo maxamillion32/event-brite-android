@@ -25,6 +25,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
     private EventResponseModel.EventsEntity eventsEntity;
     private Button btnPublishEvent;
     private ApiCallMethods service;
+    private Button btnCreateTicket;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
 
         ticketName = (EditText) findViewById(R.id.ticketName);
         totalTickets = (EditText) findViewById(R.id.totalTickets);
-        final Button btnCreateTicket = (Button) findViewById(R.id.btnCreateTicket);
+        btnCreateTicket = (Button) findViewById(R.id.btnCreateTicket);
         btnPublishEvent = (Button) findViewById(R.id.btnPublishEvent);
         btnCreateTicket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +67,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Response<ResponseBody> response) {
                         btnPublishEvent.setVisibility(View.VISIBLE);
+                        btnCreateTicket.setVisibility(View.GONE);
                     }
                 });
     }

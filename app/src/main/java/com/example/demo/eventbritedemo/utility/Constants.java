@@ -10,6 +10,7 @@ public final class Constants {
     public static final class IntentKeys {
         public static final String EVENT = "event";
         public static final String EVENT_ID = "event_id";
+        public static final String VENUE_ID = "venue_id";
     }
 
     public interface ViewFlipperConstants {

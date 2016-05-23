@@ -22,6 +22,7 @@
     <Button
         android:id="@+id/btnSetDate"
         android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="Done"

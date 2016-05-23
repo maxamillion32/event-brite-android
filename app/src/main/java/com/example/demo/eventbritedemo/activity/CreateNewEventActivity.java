@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,7 +14,6 @@ import android.widget.TimePicker;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
-import com.example.demo.eventbritedemo.model.VenueModel;
 import com.example.demo.eventbritedemo.utility.Constants;
 import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
@@ -25,16 +24,16 @@ import com.google.gson.JsonObject;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 public class CreateNewEventActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE = 51;
     private EditText eventName;
     private EditText eventCurrency;
     private Button btnCreateEvent;
     private EventResponseModel.EventsEntity eventsEntity;
-    private VenueModel venueEntity;
+    private String venueId;
     private Button venue;
     private ApiCallMethods service;
     private Button btnStartDate;
@@ -65,7 +64,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
         venue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                createVenue();
+                createVenue();
             }
         });
 
@@ -84,66 +83,23 @@ public class CreateNewEventActivity extends AppCompatActivity {
     }
 
     private void createVenue() {
-        service
-                .createVenue(getVenueDetails())
-                .enqueue(new CustomCallback<VenueModel>() {
-                    @Override
-                    public void onSuccess(Response<VenueModel> response) {
-                        venueEntity = response.body();
-                    }
-                });
+        startActivityForResult(new Intent(this, CreateEventVenueActivity.class), REQUEST_CODE);
     }
 
-    private JsonObject getVenueDetails() {
-        final JsonObject venue = new JsonObject();
-
-        venue.addProperty("name", "United States");
-
-        final JsonObject address = new JsonObject();
-        address.addProperty("latitude", "40.690302");
-        address.addProperty("longitude", "-73.950266");
-
-        venue.add("address", address);
-
-        final JsonObject model = new JsonObject();
-        model.add("venue", venue);
-
-        return model;
-    }
-
-    private void updateVenue() {
-
-        Log.d(getLocalClassName(), "updateVenue");
-
-        service
-                .updateVenue(eventsEntity.getVenue_id(), getVenusDetails())
-                .enqueue(new CustomCallback<ResponseBody>() {
-                    @Override
-                    public void onSuccess(Response<ResponseBody> response) {
-
-                    }
-                });
-    }
-
-    private JsonObject getVenusDetails() {
-        final JsonObject venue = new JsonObject();
-        venue.addProperty("name", "USA");
-
-        final JsonObject model = new JsonObject();
-        model.add("venue", venue);
-
-        return model;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (RESULT_OK == resultCode && REQUEST_CODE == requestCode && null != data) {
+            venueId = data.getStringExtra(Constants.IntentKeys.VENUE_ID);
+        }
     }
 
     private void createNewEvent() {
-
         service
                 .createNewEvent(getEventDetails())
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
                         Utility.showToast("Event Added Successfully");
-
                         gotoCreateEventTicketActivity(response.body());
                     }
                 });
@@ -175,8 +131,8 @@ public class CreateNewEventActivity extends AppCompatActivity {
         event.add("end", end);
         event.add("name", name);
         event.addProperty("currency", eventCurrency.getText().toString().trim());
-        if (null != eventsEntity) {
-            event.addProperty("venue_id", venueEntity.getId());
+        if (!TextUtils.isEmpty(venueId)) {
+            event.addProperty("venue_id", venueId);
         }
 
         final JsonObject model = new JsonObject();
