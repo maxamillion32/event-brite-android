@@ -33,12 +33,13 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private EditText eventName;
     private EditText eventCurrency;
     private Button btnCreateEvent;
-    private EventResponseModel.EventsEntity eventsEntity;
     private String venueId;
     private Button venue;
     private Call<EventResponseModel.EventsEntity> createEventCall;
     private Button btnStartDate;
     private Button btnEndDate;
+    private String startDate;
+    private String endDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,11 +126,11 @@ public class CreateNewEventActivity extends AppCompatActivity {
         final JsonObject start = new JsonObject();
         final TimeZone timeZone = TimeZone.getDefault();
         start.addProperty("timezone", timeZone.getID());
-        start.addProperty("utc", btnStartDate.getText().toString());
+        start.addProperty("utc", startDate);
 
         final JsonObject end = new JsonObject();
         end.addProperty("timezone", timeZone.getID());
-        end.addProperty("utc", btnEndDate.getText().toString());
+        end.addProperty("utc", endDate);
 
         final JsonObject name = new JsonObject();
         name.addProperty("html", eventName.getText().toString().trim());
@@ -155,22 +156,34 @@ public class CreateNewEventActivity extends AppCompatActivity {
         dialogView.findViewById(R.id.btnSetDate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
-                final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.timePicker);
-
-                final Calendar calendar = Calendar.getInstance();
-                calendar.set(datePicker.getYear(),
-                        datePicker.getMonth(),
-                        datePicker.getDayOfMonth(),
-                        timePicker.getCurrentHour(),
-                        timePicker.getCurrentMinute(), 0);
-                alertDialog.dismiss();
-                button.setText(Utility.getFormattedDate(calendar));
+                getDateFromDatePickers(alertDialog, dialogView, button);
             }
         });
         alertDialog.setView(dialogView);
         alertDialog.show();
+    }
+
+
+    private void getDateFromDatePickers(AlertDialog alertDialog, View dialogView, Button button) {
+        final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+        final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.timePicker);
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(datePicker.getYear(),
+                datePicker.getMonth(),
+                datePicker.getDayOfMonth(),
+                timePicker.getCurrentHour(),
+                timePicker.getCurrentMinute(), 0);
+        alertDialog.dismiss();
+        switch (button.getId()) {
+            case R.id.btnStartDate:
+                startDate = Utility.getFormattedDate(calendar);
+                break;
+            case R.id.btnEndDate:
+                endDate = Utility.getFormattedDate(calendar);
+                break;
+        }
+        button.setText(Utility.getStringDate(Utility.getFormattedDate(calendar)));
     }
 
     @Override

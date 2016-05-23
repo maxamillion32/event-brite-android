@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/btnEndDate"
         android:padding="15dp"
+        android:hint="Currency"
         android:text="USD"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
