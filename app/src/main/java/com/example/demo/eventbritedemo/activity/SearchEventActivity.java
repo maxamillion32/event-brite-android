@@ -7,7 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.adapter.EventListAdapter;
@@ -28,6 +30,7 @@ public class SearchEventActivity extends AppCompatActivity {
     private EventListAdapter adapter;
     private List<EventResponseModel.EventsEntity> eventsEntityList;
     private Call<EventResponseModel> apiCall;
+    private ProgressBar progressLoader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,9 +59,12 @@ public class SearchEventActivity extends AppCompatActivity {
         });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        progressLoader = (ProgressBar) findViewById(R.id.progressLoader);
     }
 
     private void searchEventWithName(String name) {
+        progressLoader.setVisibility(View.VISIBLE);
         if (null == service) {
             service = WebService.createServiceWithOauthHeader(
                     ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
@@ -80,6 +86,7 @@ public class SearchEventActivity extends AppCompatActivity {
     }
 
     private void displayList(EventResponseModel response) {
+        progressLoader.setVisibility(View.INVISIBLE);
         if (null == eventsEntityList) {
             eventsEntityList = new ArrayList<>(response.getEvents());
         } else {

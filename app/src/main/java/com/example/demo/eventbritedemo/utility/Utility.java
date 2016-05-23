@@ -14,24 +14,25 @@ public class Utility {
     public static String getFormattedDate() {
         final Calendar calendar = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat
-                (Constants.Date.FORMAT, Locale.ENGLISH);
+                (Constants.DateFromats.YYYY_MM_DD_T_HH_MM_SS_Z, Locale.ENGLISH);
         return simpleDateFormat.format(calendar.getTime());
     }
 
     public static String getFormattedDate(final Calendar calendar) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat
-                (Constants.Date.FORMAT, Locale.ENGLISH);
+                (Constants.DateFromats.YYYY_MM_DD_T_HH_MM_SS_Z, Locale.ENGLISH);
         return simpleDateFormat.format(calendar.getTime());
     }
 
     public static String getStringDate(final String date) {
         try {
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat
-                    (Constants.Date.FORMAT, Locale.ENGLISH);
+                    (Constants.DateFromats.YYYY_MM_DD_T_HH_MM_SS_Z, Locale.ENGLISH);
             final Calendar calendar = Calendar.getInstance();
             calendar.setTime(simpleDateFormat.parse(date));
-            return calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-"
-                    + calendar.get(Calendar.YEAR);
+            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) +
+                    " " + calendar.get(Calendar.DAY_OF_MONTH) +
+                    ", " + calendar.get(Calendar.YEAR);
         } catch (ParseException e) {
             e.printStackTrace();
             return date;

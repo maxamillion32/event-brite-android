@@ -105,7 +105,8 @@ public class EventDetailActivity extends AppCompatActivity implements
     private void displayEventDetails() {
         viewFlipper.setDisplayedChild(SUCCESS);
         eventName.setText(eventEntity.getName().getHtml());
-        eventDate.setText(Utility.getStringDate(eventEntity.getStart().toString()) + " to " +
+        eventDate.setText("Starting from " + Utility.getStringDate(eventEntity.getStart().toString()
+        ) + " to " +
                 Utility.getStringDate(eventEntity.getEnd().toString()));
         final List<TicketModel> ticket_classes = eventEntity.getTicket_classes();
         if (null == ticket_classes || ticket_classes.isEmpty()) {
