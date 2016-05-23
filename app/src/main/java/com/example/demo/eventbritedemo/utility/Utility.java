@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.example.demo.eventbritedemo.ApplicationClass;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -21,6 +22,19 @@ public class Utility {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat
                 ("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public static String getStringDate(final String date) {
+        try {
+            final SimpleDateFormat simpleDateFormat = new SimpleDateFormat
+                    ("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(simpleDateFormat.parse(date));
+            return calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return date;
+        }
     }
 
     public static void showToast(String msg) {
