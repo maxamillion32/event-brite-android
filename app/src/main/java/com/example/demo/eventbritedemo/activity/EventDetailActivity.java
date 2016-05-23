@@ -34,6 +34,7 @@ public class EventDetailActivity extends AppCompatActivity implements
     private Button btnAddTicket;
     private Button btnRegister;
     private ViewFlipper viewFlipper;
+    private Call<EventResponseModel.EventsEntity> eventDetailCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +86,8 @@ public class EventDetailActivity extends AppCompatActivity implements
 
         viewFlipper.setDisplayedChild(LOADING);
 
-        service
-                .getEventWithId(eventId)
+        eventDetailCall = service.getEventWithId(eventId);
+        eventDetailCall
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
@@ -115,6 +116,14 @@ public class EventDetailActivity extends AppCompatActivity implements
         } else {
             btnRegister.setVisibility(View.VISIBLE);
             btnAddTicket.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != eventDetailCall) {
+            eventDetailCall.cancel();
         }
     }
 }

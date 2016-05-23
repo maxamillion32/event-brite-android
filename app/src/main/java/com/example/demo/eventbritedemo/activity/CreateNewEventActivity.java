@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
 public class CreateNewEventActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private EventResponseModel.EventsEntity eventsEntity;
     private String venueId;
     private Button venue;
-    private ApiCallMethods service;
+    private Call<EventResponseModel.EventsEntity> createEventCall;
     private Button btnStartDate;
     private Button btnEndDate;
 
@@ -44,8 +45,6 @@ public class CreateNewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_event);
         initViews();
-        service = WebService.createServiceWithOauthHeader(
-                ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
     }
 
     private void initViews() {
@@ -94,8 +93,12 @@ public class CreateNewEventActivity extends AppCompatActivity {
     }
 
     private void createNewEvent() {
-        service
-                .createNewEvent(getEventDetails())
+
+        createEventCall = WebService.createServiceWithOauthHeader(
+                ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT)
+                .createNewEvent(getEventDetails());
+
+        createEventCall
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
@@ -168,5 +171,13 @@ public class CreateNewEventActivity extends AppCompatActivity {
         });
         alertDialog.setView(dialogView);
         alertDialog.show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != createEventCall) {
+            createEventCall.cancel();
+        }
     }
 }

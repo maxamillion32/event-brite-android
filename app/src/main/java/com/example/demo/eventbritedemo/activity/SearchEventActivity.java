@@ -100,4 +100,13 @@ public class SearchEventActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (null != apiCall) {
+            apiCall.cancel();
+        }
+    }
 }

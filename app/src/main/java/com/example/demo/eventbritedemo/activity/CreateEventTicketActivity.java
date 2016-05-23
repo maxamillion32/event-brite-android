@@ -17,6 +17,7 @@ import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 
 public class CreateEventTicketActivity extends AppCompatActivity {
@@ -26,6 +27,8 @@ public class CreateEventTicketActivity extends AppCompatActivity {
     private Button btnPublishEvent;
     private ApiCallMethods service;
     private Button btnCreateTicket;
+    private Call<ResponseBody> createTicketCall;
+    private Call<ResponseBody> publishEventCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,21 +64,20 @@ public class CreateEventTicketActivity extends AppCompatActivity {
         if (null == eventsEntity) {
             return;
         }
-        service
-                .createTicket(eventsEntity.getId(), getTicketDetails())
-                .enqueue(new CustomCallback<ResponseBody>() {
-                    @Override
-                    public void onSuccess(Response<ResponseBody> response) {
-                        btnPublishEvent.setVisibility(View.VISIBLE);
-                        btnCreateTicket.setVisibility(View.GONE);
-                        Utility.showToast("Ticket created for Event. Publish it to go Live");
-                    }
+        createTicketCall = service.createTicket(eventsEntity.getId(), getTicketDetails());
+        createTicketCall.enqueue(new CustomCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(Response<ResponseBody> response) {
+                btnPublishEvent.setVisibility(View.VISIBLE);
+                btnCreateTicket.setVisibility(View.GONE);
+                Utility.showToast("Ticket created for Event. Publish it to go Live");
+            }
 
-                    @Override
-                    public boolean showLoader() {
-                        return true;
-                    }
-                });
+            @Override
+            public boolean showLoader() {
+                return true;
+            }
+        });
     }
 
     private JsonObject getTicketDetails() {
@@ -92,20 +94,32 @@ public class CreateEventTicketActivity extends AppCompatActivity {
         if (null == eventsEntity) {
             return;
         }
-        service
-                .publishEvent(eventsEntity.getId())
-                .enqueue(new CustomCallback<ResponseBody>() {
-                    @Override
-                    public void onSuccess(Response<ResponseBody> response) {
-                        Utility.showToast("Event is now Live");
-                        finish();
-                    }
+        publishEventCall = service
+                .publishEvent(eventsEntity.getId());
+        publishEventCall.enqueue(new CustomCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(Response<ResponseBody> response) {
+                Utility.showToast("Event is now Live");
+                finish();
+            }
 
-                    @Override
-                    public boolean showLoader() {
-                        return true;
-                    }
-                });
+            @Override
+            public boolean showLoader() {
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != createTicketCall) {
+            createTicketCall.cancel();
+        }
+
+        if (null != publishEventCall) {
+            publishEventCall.cancel();
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 package com.example.demo.eventbritedemo.webservice;
 
+import android.support.annotation.NonNull;
+
 import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.utility.Validation;
 
@@ -15,7 +17,7 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     public CustomCallback() {
         if (showLoader()) {
-            Utility.showToastLong("Loading");
+            Utility.showToastLong(getLoadingMessage());
         }
     }
 
@@ -37,5 +39,10 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     public boolean showLoader() {
         return false;
+    }
+
+    @NonNull
+    public String getLoadingMessage() {
+        return "Loading";
     }
 }

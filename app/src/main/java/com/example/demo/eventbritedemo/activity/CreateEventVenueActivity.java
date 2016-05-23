@@ -18,23 +18,22 @@ import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
 public class CreateEventVenueActivity extends AppCompatActivity {
-    private ApiCallMethods service;
     private VenueModel venueEntity;
     private Button createVenue;
     private EditText venueName;
     private EditText venueLat;
     private EditText venueLong;
+    private Call<VenueModel> createVenueCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_venue);
         initViews();
-        service = WebService.createServiceWithOauthHeader
-                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
     }
 
     private void initViews() {
@@ -42,21 +41,22 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         createVenue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                service
-                        .createVenue(getVenueDetails())
-                        .enqueue(new CustomCallback<VenueModel>() {
-                            @Override
-                            public void onSuccess(Response<VenueModel> response) {
-                                venueEntity = response.body();
-                                Utility.showToast("Venue created successfully");
-                                finish();
-                            }
+                createVenueCall = WebService.createServiceWithOauthHeader
+                        (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT)
+                        .createVenue(getVenueDetails());
+                createVenueCall.enqueue(new CustomCallback<VenueModel>() {
+                    @Override
+                    public void onSuccess(Response<VenueModel> response) {
+                        venueEntity = response.body();
+                        Utility.showToast("Venue created successfully");
+                        finish();
+                    }
 
-                            @Override
-                            public boolean showLoader() {
-                                return true;
-                            }
-                        });
+                    @Override
+                    public boolean showLoader() {
+                        return true;
+                    }
+                });
             }
         });
 
@@ -91,7 +91,15 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         return model;
     }
 
-//    private void updateVenue() {
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != createVenueCall) {
+            createVenueCall.cancel();
+        }
+    }
+
+    //    private void updateVenue() {
 //
 //        Log.d(getLocalClassName(), "updateVenue");
 //
