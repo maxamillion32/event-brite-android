@@ -1,7 +1,12 @@
 package com.example.demo.eventbritedemo.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +35,7 @@ import retrofit2.Response;
 public class CreateNewEventActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 51;
+    private static final int REQUEST_CODE_IMAGE = 61;
     private EditText eventName;
     private EditText eventCurrency;
     private Button btnCreateEvent;
@@ -80,6 +86,60 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         btnStartDate.setOnClickListener(datePickerListener);
         btnEndDate.setOnClickListener(datePickerListener);
+
+        final Button btnImagePick = (Button) findViewById(R.id.btnImagePick);
+        btnImagePick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askImageCapture();
+            }
+        });
+    }
+
+    private void askImageCapture() {
+        new AlertDialog.Builder(CreateNewEventActivity.this)
+                .setPositiveButton("Pick Gallery", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openGallery();
+                    }
+                })
+                .setNegativeButton("Capture new", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openCamera();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void openGallery() {
+        final Intent intent = new Intent();
+        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+            // For Android versions of KitKat or later, we use a
+            // different intent to ensure
+            // we can get the file path from the returned intent URI
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
+
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_IMAGE);
+    }
+
+    private void openCamera() {
+        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        final Uri fileUri = getOutputMediaFileUri(); // create a file to save the image
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+        startActivityForResult(intent, REQUEST_CODE_IMAGE);
+    }
+
+    private Uri getOutputMediaFileUri() {
+        return Uri.fromFile(Environment.getExternalStorageDirectory());
     }
 
     private void createVenue() {
@@ -88,9 +148,22 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (RESULT_OK == resultCode && REQUEST_CODE == requestCode && null != data) {
-            venueId = data.getStringExtra(Constants.IntentKeys.VENUE_ID);
+        if (RESULT_OK == resultCode) {
+            if (null != data) {
+                if (REQUEST_CODE == requestCode) {
+                    venueId = data.getStringExtra(Constants.IntentKeys.VENUE_ID);
+                    return;
+                }
+
+                if (REQUEST_CODE_IMAGE == requestCode) {
+                    displayImage(data);
+                }
+            }
         }
+    }
+
+    private void displayImage(Intent data) {
+
     }
 
     private void createNewEvent() {

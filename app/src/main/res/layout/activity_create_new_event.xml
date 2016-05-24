@@ -53,10 +53,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnEndDate"
-        android:padding="15dp"
+        android:layout_marginBottom="10dp"
         android:hint="Currency"
+        android:padding="15dp"
         android:text="USD"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <Button
+        android:id="@+id/btnImagePick"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventCurrency"
+        android:layout_centerHorizontal="true"
+        android:text="Pick a Pic"/>
 
     <LinearLayout
         android:layout_width="match_parent"
