@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -26,10 +27,16 @@ import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateNewEventActivity extends AppCompatActivity {
@@ -46,6 +53,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private Button btnEndDate;
     private String startDate;
     private String endDate;
+    private Call<JsonObject> imageUploadCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +99,60 @@ public class CreateNewEventActivity extends AppCompatActivity {
         btnImagePick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                askImageCapture();
+//                askImageCapture();
+                initiateImageUpload();
+            }
+        });
+    }
+
+    private void initiateImageUpload() {
+        imageUploadCall = WebService
+                .createServiceWithOauthHeader(ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT)
+                .getImageUpload("image-event-logo");
+
+        imageUploadCall.enqueue(new CustomCallback<JsonObject>() {
+            @Override
+            public void onSuccess(Response<JsonObject> response) {
+
+                uploadFile("");
+
+            }
+        });
+    }
+
+    private void uploadFile(String uri) {
+// create upload service client
+        final ApiCallMethods service = WebService.createServiceWithOauthHeader(ApiCallMethods.class,
+                ApiCallMethods.SERVICE_ENDPOINT);
+
+        final File file = new File(uri);
+
+        // create RequestBody instance from file
+        final RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        final MultipartBody.Part body =
+                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+
+        // add another part within the multipart request
+        final String descriptionString = "hello, this is description speaking";
+        final RequestBody description = RequestBody.create(
+                MediaType.parse("multipart/form-data"), descriptionString
+        );
+
+        // finally, execute the request
+        final Call<ResponseBody> call = service.uploadImage(description, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
             }
         });
     }
