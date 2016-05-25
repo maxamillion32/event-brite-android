@@ -35,8 +35,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_ticket);
         initViews();
-        service = WebService.createServiceWithOauthHeader
-                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+        service = WebService.createServiceWithOauthHeader(ApiCallMethods.class);
     }
 
     private void initViews() {

@@ -81,8 +81,8 @@ public class EventDetailActivity extends AppCompatActivity implements
     }
 
     private void getEventDetailsFor(String eventId) {
-        final ApiCallMethods service = WebService.createServiceWithOauthHeader
-                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+        final ApiCallMethods service = WebService.createServiceWithOauthHeader(ApiCallMethods
+                .class);
 
         viewFlipper.setDisplayedChild(LOADING);
 

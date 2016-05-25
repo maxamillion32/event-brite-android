@@ -2,12 +2,14 @@ package com.example.demo.eventbritedemo.webservice;
 
 import com.example.demo.eventbritedemo.model.AuthResponseModel;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
+import com.example.demo.eventbritedemo.model.ImageUploadModel;
 import com.example.demo.eventbritedemo.model.UserDetailModel;
 import com.example.demo.eventbritedemo.model.VenueModel;
 import com.google.gson.JsonObject;
 
+import java.util.LinkedHashMap;
+
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -17,8 +19,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface ApiCallMethods {
     String OAUTH_ENDPOINT = "https://www.eventbrite.com/";
@@ -65,10 +69,17 @@ public interface ApiCallMethods {
     Call<EventResponseModel.EventsEntity> getEventWithId(@Path("id") String eventId);
 
     @GET("v3/media/upload/")
-    Call<JsonObject> getImageUpload(@Query("type") String imageType);
+    Call<ImageUploadModel> getImageUpload(@Query("type") String imageType);
+
+    @POST("v3/media/upload/")
+    Call<JsonObject> notifyImageUpload(@Query("upload_token") String uploadToken);
 
     @Multipart
-    @POST("")
-    Call<ResponseBody> uploadImage(@Part("description") RequestBody description,
-                                   @Part MultipartBody.Part file);
+    @POST
+    Call<ResponseBody> uploadImage(
+            @PartMap LinkedHashMap<String, String> params,
+            @Url String url,
+            @Part MultipartBody.Part file
+
+    );
 }

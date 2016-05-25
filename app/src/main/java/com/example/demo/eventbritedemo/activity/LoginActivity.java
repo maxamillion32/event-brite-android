@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements Constants.ViewFl
     private void getUserDetails() {
         viewFlipper.setDisplayedChild(LOADING);
         final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
-                (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+                (ApiCallMethods.class);
 
         retrofitService
                 .getUserDetails()

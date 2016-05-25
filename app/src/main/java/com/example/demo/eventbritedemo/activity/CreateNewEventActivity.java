@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +21,9 @@ import android.widget.TimePicker;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
+import com.example.demo.eventbritedemo.model.ImageUploadModel;
 import com.example.demo.eventbritedemo.utility.Constants;
+import com.example.demo.eventbritedemo.utility.UriManager;
 import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
 import com.example.demo.eventbritedemo.webservice.CustomCallback;
@@ -29,6 +32,7 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.TimeZone;
 
 import okhttp3.MediaType;
@@ -53,7 +57,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private Button btnEndDate;
     private String startDate;
     private String endDate;
-    private Call<JsonObject> imageUploadCall;
+    private Call<ImageUploadModel> imageUploadCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,33 +103,37 @@ public class CreateNewEventActivity extends AppCompatActivity {
         btnImagePick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                askImageCapture();
-                initiateImageUpload();
+                askImageCapture();
+//                initiateImageUpload();
             }
         });
     }
 
-    private void initiateImageUpload() {
-        imageUploadCall = WebService
-                .createServiceWithOauthHeader(ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT)
+    private void initiateImageUpload(final String imagePath) {
+        imageUploadCall = WebService.createServiceWithOauthHeader(ApiCallMethods.class)
                 .getImageUpload("image-event-logo");
 
-        imageUploadCall.enqueue(new CustomCallback<JsonObject>() {
+        imageUploadCall.enqueue(new CustomCallback<ImageUploadModel>() {
             @Override
-            public void onSuccess(Response<JsonObject> response) {
+            public void onSuccess(final Response<ImageUploadModel> response) {
+                Log.d(getLocalClassName(), "sdghsdg");
 
-                uploadFile("");
-
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadFile(response.body(), imagePath);
+                    }
+                }, 7000);
             }
         });
     }
 
-    private void uploadFile(String uri) {
-// create upload service client
-        final ApiCallMethods service = WebService.createServiceWithOauthHeader(ApiCallMethods.class,
-                ApiCallMethods.SERVICE_ENDPOINT);
+    private void uploadFile(final ImageUploadModel imageUploadModel, String path) {
+        // create upload service client
+        final ApiCallMethods service = WebService
+                .createRetrofitService(ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
 
-        final File file = new File(uri);
+        final File file = new File(path);
 
         // create RequestBody instance from file
         final RequestBody requestFile =
@@ -133,7 +141,8 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
         // MultipartBody.Part is used to send also the actual file name
         final MultipartBody.Part body =
-                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+                MultipartBody.Part.createFormData(imageUploadModel.getFile_parameter_name(),
+                        file.getName(), requestFile);
 
         // add another part within the multipart request
         final String descriptionString = "hello, this is description speaking";
@@ -141,18 +150,50 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 MediaType.parse("multipart/form-data"), descriptionString
         );
 
+        final ImageUploadModel.UploadDataEntity upload_data = imageUploadModel.getUpload_data();
+
+        RequestBody fbody = RequestBody.create(MediaType.parse("image/*"), file);
+
         // finally, execute the request
-        final Call<ResponseBody> call = service.uploadImage(description, body);
+        final Call<ResponseBody> call = service.uploadImage(
+                getParams(upload_data),
+                imageUploadModel.getUpload_url(),
+                body
+        );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.v("Upload", "success");
+                notifyImageUpload(imageUploadModel);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("Upload error:", t.getMessage());
+            }
+        });
+    }
+
+    private LinkedHashMap<String, String> getParams(ImageUploadModel.UploadDataEntity upload_data) {
+        final LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("key", upload_data.getKey());
+        params.put("AWSAccessKeyId", upload_data.getAWSAccessKeyId());
+        params.put("bucket", upload_data.getBucket());
+        params.put("acl", upload_data.getAcl());
+        params.put("signature", upload_data.getSignature());
+        params.put("policy", upload_data.getPolicy());
+        return params;
+    }
+
+    private void notifyImageUpload(ImageUploadModel imageUploadModel) {
+        final Call<JsonObject> imageUploadModelCall = WebService
+                .createServiceWithOauthHeader(ApiCallMethods.class)
+                .notifyImageUpload(imageUploadModel.getUpload_token());
+
+        imageUploadModelCall.enqueue(new CustomCallback<JsonObject>() {
+            @Override
+            public void onSuccess(Response<JsonObject> response) {
+
             }
         });
     }
@@ -224,13 +265,14 @@ public class CreateNewEventActivity extends AppCompatActivity {
     }
 
     private void displayImage(Intent data) {
-
+        final String imagePath = UriManager.getPath(data.getData(), this);
+        Log.d(getLocalClassName(), "### " + imagePath);
+        initiateImageUpload(imagePath);
     }
 
     private void createNewEvent() {
 
-        createEventCall = WebService.createServiceWithOauthHeader(
-                ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT)
+        createEventCall = WebService.createServiceWithOauthHeader(ApiCallMethods.class)
                 .createNewEvent(getEventDetails());
 
         createEventCall

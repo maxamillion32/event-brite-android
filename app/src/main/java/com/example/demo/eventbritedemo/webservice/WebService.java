@@ -74,6 +74,15 @@ public class WebService {
         return restAdapter.create(clazz);
     }
 
+    public static <T> T createServiceWithOauthHeader(final Class<T> clazz) {
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(getAuthorizationHeader());
+        httpClient.addInterceptor(getHttpLoggingInterceptor());
+        final OkHttpClient client = httpClient.build();
+        final Retrofit restAdapter = getRetrofitInstance(ApiCallMethods.SERVICE_ENDPOINT, client);
+        return restAdapter.create(clazz);
+    }
+
     /**
      * interceptor with OAuth header
      *

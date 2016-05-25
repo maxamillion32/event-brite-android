@@ -66,8 +66,7 @@ public class SearchEventActivity extends AppCompatActivity {
     private void searchEventWithName(String name) {
         progressLoader.setVisibility(View.VISIBLE);
         if (null == service) {
-            service = WebService.createServiceWithOauthHeader(
-                    ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+            service = WebService.createServiceWithOauthHeader(ApiCallMethods.class);
         }
         if (null != apiCall) {
             apiCall.cancel();

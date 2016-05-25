@@ -41,8 +41,7 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         createVenue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createVenueCall = WebService.createServiceWithOauthHeader
-                        (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT)
+                createVenueCall = WebService.createServiceWithOauthHeader(ApiCallMethods.class)
                         .createVenue(getVenueDetails());
                 createVenueCall.enqueue(new CustomCallback<VenueModel>() {
                     @Override

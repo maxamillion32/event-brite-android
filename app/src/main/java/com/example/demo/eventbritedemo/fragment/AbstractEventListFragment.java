@@ -56,7 +56,7 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
         viewFlipper.setDisplayedChild(LOADING);
         if (null == apiCall) {
             final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
-                    (ApiCallMethods.class, ApiCallMethods.SERVICE_ENDPOINT);
+                    (ApiCallMethods.class);
             apiCall = retrofitService.getOwnedEventListWithStatus(getEventType());
         }
         apiCall.cancel();
