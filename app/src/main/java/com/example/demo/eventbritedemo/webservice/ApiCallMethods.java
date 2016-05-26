@@ -82,4 +82,7 @@ public interface ApiCallMethods {
             @Part MultipartBody.Part file
 
     );
+
+    @GET("geocode/json")
+    Call<JsonObject> getLocationFor(@Query("address") String name);
 }

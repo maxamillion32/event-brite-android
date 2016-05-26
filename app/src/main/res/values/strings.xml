@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EventBriteDemo</string>
+    <string name="google_maps_key">AIzaSyDF7gEfpEhKykdL_CY6csFygLb_ZsR8Edc</string>
 </resources>

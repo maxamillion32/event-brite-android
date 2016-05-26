@@ -21,32 +21,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtLabel"
-        android:layout_marginBottom="10dp"
         android:hint="Venue Name"
         android:padding="15dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+    <Button
+        android:id="@+id/searchName"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/venueName"
+        android:layout_centerHorizontal="true"
+        android:text="Search"/>
+
     <EditText
         android:id="@+id/venueLat"
         android:layout_width="match_parent"
-        android:text="40.690302"
         android:layout_height="wrap_content"
         android:layout_below="@id/venueName"
         android:layout_marginBottom="10dp"
         android:hint="Venue Latitude"
         android:padding="15dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:text="40.690302"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/venueLong"
         android:layout_width="match_parent"
-        android:text="-73.950266"
         android:layout_height="wrap_content"
         android:layout_below="@id/venueLat"
         android:layout_marginBottom="10dp"
         android:hint="Venue Longitude"
         android:padding="15dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:text="-73.950266"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/createVenue"
@@ -55,4 +65,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="Create Venue"/>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/createVenue"
+        android:layout_below="@id/searchName"
+        android:layout_marginBottom="10dp"/>
+
 </RelativeLayout>

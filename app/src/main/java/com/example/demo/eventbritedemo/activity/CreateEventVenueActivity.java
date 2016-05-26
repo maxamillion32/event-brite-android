@@ -64,6 +64,14 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         venueLat = (EditText) findViewById(R.id.venueLat);
         venueLong = (EditText) findViewById(R.id.venueLong);
 
+        final Button searchName = (Button) findViewById(R.id.searchName);
+        searchName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchByName(venueName.getText().toString());
+            }
+        });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -109,6 +117,20 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void searchByName(String name) {
+        final Call<JsonObject> locationCall = WebService
+                .createRetrofitService(ApiCallMethods.class,
+                        "http://maps.googleapis.com/maps/api/")
+                .getLocationFor(name);
+
+        locationCall.enqueue(new CustomCallback<JsonObject>() {
+            @Override
+            public void onSuccess(Response<JsonObject> response) {
+
+            }
+        });
     }
 
 
