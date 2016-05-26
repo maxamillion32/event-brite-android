@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ public class EventDetailActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_event_detail);
 
         viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         eventName = (TextView) findViewById(R.id.eventName);
         eventDate = (TextView) findViewById(R.id.eventDate);
@@ -106,7 +109,8 @@ public class EventDetailActivity extends AppCompatActivity implements
     private void displayEventDetails() {
         viewFlipper.setDisplayedChild(SUCCESS);
         eventName.setText(eventEntity.getName().getHtml());
-        eventDate.setText("Starting from " + Utility.getStringDate(eventEntity.getStart().toString()
+        eventDate.setText("Starting from :" + Utility.getStringDate(eventEntity.getStart()
+                .toString()
         ) + " to " +
                 Utility.getStringDate(eventEntity.getEnd().toString()));
         final List<TicketModel> ticket_classes = eventEntity.getTicket_classes();
@@ -125,5 +129,15 @@ public class EventDetailActivity extends AppCompatActivity implements
         if (null != eventDetailCall) {
             eventDetailCall.cancel();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

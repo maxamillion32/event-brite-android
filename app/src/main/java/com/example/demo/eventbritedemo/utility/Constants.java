@@ -19,8 +19,8 @@ public final class Constants {
         int SUCCESS = 2;
     }
 
-    public static final class DateFromats {
+    public static final class DateFormats {
         public static final String YYYY_MM_DD_T_HH_MM_SS_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-        public static final String DD_MMM_YYYY_AT_HH_MM_SS = "dd MMM, yyyy at HH:mm:ss";
+        public static final String DD_MMM_YYYY_AT_HH_MM_SS = "dd MMM, yyyy 'at' hh:mm a";
     }
 }

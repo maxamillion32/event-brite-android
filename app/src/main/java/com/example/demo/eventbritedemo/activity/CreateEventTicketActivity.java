@@ -3,9 +3,11 @@ package com.example.demo.eventbritedemo.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
@@ -29,12 +31,15 @@ public class CreateEventTicketActivity extends AppCompatActivity {
     private Button btnCreateTicket;
     private Call<ResponseBody> createTicketCall;
     private Call<ResponseBody> publishEventCall;
+    private EditText ticketPrice;
+    private Boolean isTicketFree = Boolean.TRUE;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_ticket);
         initViews();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         service = WebService.createServiceWithOauthHeader(ApiCallMethods.class);
     }
 
@@ -42,6 +47,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
         eventsEntity = getIntent().getParcelableExtra(Constants.IntentKeys.EVENT);
 
         ticketName = (EditText) findViewById(R.id.ticketName);
+        ticketPrice = (EditText) findViewById(R.id.ticketPrice);
         totalTickets = (EditText) findViewById(R.id.totalTickets);
         btnCreateTicket = (Button) findViewById(R.id.btnCreateTicket);
         btnPublishEvent = (Button) findViewById(R.id.btnPublishEvent);
@@ -55,6 +61,23 @@ public class CreateEventTicketActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 publishEvent();
+            }
+        });
+
+        final RadioGroup radioGrp = (RadioGroup) findViewById(R.id.radioGrp);
+        radioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radioBtnFree:
+                        ticketPrice.setVisibility(View.GONE);
+                        isTicketFree = Boolean.TRUE;
+                        break;
+                    case R.id.radioBtnPaid:
+                        isTicketFree = Boolean.FALSE;
+                        ticketPrice.setVisibility(View.VISIBLE);
+                        break;
+                }
             }
         });
     }
@@ -83,7 +106,12 @@ public class CreateEventTicketActivity extends AppCompatActivity {
         final JsonObject model = new JsonObject();
         final JsonObject ticket = new JsonObject();
         ticket.addProperty("name", ticketName.getText().toString());
-        ticket.addProperty("free", Boolean.TRUE);
+        ticket.addProperty("free", isTicketFree);
+
+        if (!isTicketFree) {
+            ticket.addProperty("cost", "USD," + ticketPrice.getText() + "00");
+        }
+
         ticket.addProperty("quantity_total", Integer.parseInt(totalTickets.getText().toString()));
         model.add("ticket_class", ticket);
         return model;
@@ -119,6 +147,16 @@ public class CreateEventTicketActivity extends AppCompatActivity {
         if (null != publishEventCall) {
             publishEventCall.cancel();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

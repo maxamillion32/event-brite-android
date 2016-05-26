@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -40,6 +41,8 @@ public class SearchEventActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final EditText edtSearch = (EditText) findViewById(R.id.edtSearch);
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -107,5 +110,15 @@ public class SearchEventActivity extends AppCompatActivity {
         if (null != apiCall) {
             apiCall.cancel();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

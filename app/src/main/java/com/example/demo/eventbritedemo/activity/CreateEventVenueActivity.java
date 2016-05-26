@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,6 +63,8 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         venueName = (EditText) findViewById(R.id.venueName);
         venueLat = (EditText) findViewById(R.id.venueLat);
         venueLong = (EditText) findViewById(R.id.venueLong);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -97,6 +100,17 @@ public class CreateEventVenueActivity extends AppCompatActivity {
             createVenueCall.cancel();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     //    private void updateVenue() {
 //

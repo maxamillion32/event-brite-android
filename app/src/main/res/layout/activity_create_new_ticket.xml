@@ -6,42 +6,11 @@
     android:gravity="center_horizontal"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/txtLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="In order to make the Event Live, Please add tickets for the event"
-        android:textColor="@color/colorAccent"/>
-
-    <EditText
-        android:id="@+id/ticketName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtLabel"
-        android:layout_marginBottom="10dp"
-        android:hint="Ticket Name"
-        android:padding="15dp"/>
-
-    <EditText
-        android:id="@+id/totalTickets"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ticketName"
-        android:layout_marginBottom="10dp"
-        android:hint="Total Tickets"
-        android:inputType="number"
-        android:padding="15dp"
-        android:text="100"/>
-
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
-
 
         <Button
             android:id="@+id/btnCreateTicket"
@@ -49,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Create Ticket"/>
+            android:text="Create Event"/>
 
         <Button
             android:id="@+id/btnPublishEvent"
@@ -62,4 +31,90 @@
             android:visibility="gone"/>
 
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/linearLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="In order to make the Event Live, Please add tickets for the event"
+                android:textColor="@color/colorAccent"/>
+
+            <EditText
+                android:id="@+id/ticketName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Ticket Name"
+                android:padding="15dp"/>
+
+            <EditText
+                android:id="@+id/totalTickets"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Total Tickets"
+                android:inputType="number"
+                android:padding="15dp"
+                android:text="100"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/totalTickets"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Select Type of Ticket"
+                android:textColor="@color/colorAccent"/>
+
+            <RadioGroup
+                android:id="@+id/radioGrp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioBtnFree"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Free"/>
+
+                <RadioButton
+                    android:id="@+id/radioBtnPaid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Paid"/>
+
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/ticketPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Ticket Price ($)"
+                android:inputType="number"
+                android:padding="15dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </RelativeLayout>
