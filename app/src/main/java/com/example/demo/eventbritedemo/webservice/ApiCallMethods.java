@@ -47,7 +47,7 @@ public interface ApiCallMethods {
     @GET("v3/users/me/")
     Call<UserDetailModel> getUserDetails();
 
-    @POST("v3/events/?expand=ticket_classes")
+    @POST("v3/events/?expand=ticket_classes/")
     Call<EventResponseModel.EventsEntity> createNewEvent(@Body JsonObject model);
 
     @POST("v3/events/{id}/publish/")
@@ -65,7 +65,7 @@ public interface ApiCallMethods {
     @GET("v3/events/search/")
     Call<EventResponseModel> searchEventWith(@Query("q") String stringVal);
 
-    @GET("v3/events/{id}/?expand=ticket_classes")
+    @GET("v3/events/{id}/?expand=ticket_classes/")
     Call<EventResponseModel.EventsEntity> getEventWithId(@Path("id") String eventId);
 
     @GET("v3/media/upload/")

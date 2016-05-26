@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -40,7 +39,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateNewEventActivity extends AppCompatActivity {
@@ -116,14 +114,12 @@ public class CreateNewEventActivity extends AppCompatActivity {
         imageUploadCall.enqueue(new CustomCallback<ImageUploadModel>() {
             @Override
             public void onSuccess(final Response<ImageUploadModel> response) {
-                Log.d(getLocalClassName(), "sdghsdg");
+                uploadFile(response.body(), imagePath);
+            }
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        uploadFile(response.body(), imagePath);
-                    }
-                }, 7000);
+            @Override
+            public boolean showLoader() {
+                return true;
             }
         });
     }
@@ -160,16 +156,17 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 imageUploadModel.getUpload_url(),
                 body
         );
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new CustomCallback<ResponseBody>() {
+
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 Log.v("Upload", "success");
                 notifyImageUpload(imageUploadModel);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+            public boolean showLoader() {
+                return true;
             }
         });
     }
@@ -194,6 +191,11 @@ public class CreateNewEventActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Response<JsonObject> response) {
 
+            }
+
+            @Override
+            public boolean showLoader() {
+                return true;
             }
         });
     }

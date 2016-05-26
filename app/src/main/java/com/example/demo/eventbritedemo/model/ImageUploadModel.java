@@ -1,8 +1,5 @@
 package com.example.demo.eventbritedemo.model;
 
-/**
- * Created by webonise on 25/05/16.
- */
 public class ImageUploadModel {
 
     private String upload_method;
