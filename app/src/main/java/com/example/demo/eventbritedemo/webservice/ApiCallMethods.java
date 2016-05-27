@@ -85,4 +85,7 @@ public interface ApiCallMethods {
 
     @GET("geocode/json")
     Call<JsonObject> getLocationFor(@Query("address") String name);
+
+    @GET("geocode/json")
+    Call<JsonObject> getAddressFor(@Query("latlng") String name);
 }

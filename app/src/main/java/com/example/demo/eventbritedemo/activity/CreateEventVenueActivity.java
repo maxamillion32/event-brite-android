@@ -2,9 +2,11 @@ package com.example.demo.eventbritedemo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,13 @@ import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
 import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -29,6 +38,10 @@ public class CreateEventVenueActivity extends AppCompatActivity {
     private EditText venueLat;
     private EditText venueLong;
     private Call<VenueModel> createVenueCall;
+    private SupportMapFragment mapFragment;
+    private Marker marker;
+    private ApiCallMethods service;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +52,32 @@ public class CreateEventVenueActivity extends AppCompatActivity {
 
     private void initViews() {
         createVenue = (Button) findViewById(R.id.createVenue);
-        createVenue.setOnClickListener(new View.OnClickListener() {
+        createVenue.setOnClickListener(getOnCreateVenueClickListener());
+
+        venueName = (EditText) findViewById(R.id.venueName);
+        venueLat = (EditText) findViewById(R.id.venueLat);
+        venueLong = (EditText) findViewById(R.id.venueLong);
+
+        final Button searchName = (Button) findViewById(R.id.searchName);
+        searchName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchByName(venueName.getText().toString());
+            }
+        });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initMaps();
+
+        service = WebService
+                .createRetrofitService(ApiCallMethods.class,
+                        "http://maps.googleapis.com/maps/api/");
+    }
+
+    @NonNull
+    private View.OnClickListener getOnCreateVenueClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createVenueCall = WebService.createServiceWithOauthHeader(ApiCallMethods.class)
@@ -58,21 +96,26 @@ public class CreateEventVenueActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        };
+    }
 
-        venueName = (EditText) findViewById(R.id.venueName);
-        venueLat = (EditText) findViewById(R.id.venueLat);
-        venueLong = (EditText) findViewById(R.id.venueLong);
+    private void initMaps() {
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
 
-        final Button searchName = (Button) findViewById(R.id.searchName);
-        searchName.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                searchByName(venueName.getText().toString());
+            public void onMapReady(final GoogleMap googleMap) {
+                CreateEventVenueActivity.this.googleMap = googleMap;
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        displayMarker(latLng);
+                    }
+                });
+
             }
         });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -120,21 +163,77 @@ public class CreateEventVenueActivity extends AppCompatActivity {
     }
 
     private void searchByName(String name) {
-        final Call<JsonObject> locationCall = WebService
-                .createRetrofitService(ApiCallMethods.class,
-                        "http://maps.googleapis.com/maps/api/")
-                .getLocationFor(name);
+        service
+                .getLocationFor(name)
+                .enqueue(new CustomCallback<JsonObject>() {
+                    @Override
+                    public void onSuccess(Response<JsonObject> response) {
+                        try {
+                            final JsonObject locationJson = response.body()
+                                    .getAsJsonArray("results").get(0)
+                                    .getAsJsonObject().getAsJsonObject("geometry")
+                                    .getAsJsonObject("location");
 
-        locationCall.enqueue(new CustomCallback<JsonObject>() {
-            @Override
-            public void onSuccess(Response<JsonObject> response) {
+                            Log.d("dsgadrsg", locationJson.toString());
 
-            }
-        });
+                            final LatLng location = new LatLng(
+                                    Double.parseDouble(
+                                            locationJson.getAsJsonPrimitive("lat").toString()
+                                    ),
+                                    Double.parseDouble(
+                                            locationJson.getAsJsonPrimitive("lng").toString()
+                                    )
+                            );
+                            displayOnMaps(location);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            onFailure(null, e);
+                        }
+                    }
+
+                    @Override
+                    public boolean showLoader() {
+                        return true;
+                    }
+                });
+    }
+
+    private void displayOnMaps(final LatLng location) {
+        displayMarker(location);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+    }
+
+    private void displayMarker(LatLng location) {
+        if (null != marker) {
+            marker.remove();
+        }
+        marker = googleMap.addMarker(new MarkerOptions().position(location));
+        getAddressFromLocation(location);
+    }
+
+    private void getAddressFromLocation(LatLng location) {
+        service
+                .getAddressFor(location.latitude + "," + location.longitude)
+                .enqueue(new CustomCallback<JsonObject>() {
+                    @Override
+                    public void onSuccess(Response<JsonObject> response) {
+                        try {
+                            final String address = response.body().getAsJsonArray("results")
+                                    .get(0).getAsJsonObject()
+                                    .getAsJsonPrimitive("formatted_address")
+                                    .toString().replaceAll("\"", "");
+                            venueName.setText(address);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
     }
 
 
-    //    private void updateVenue() {
+//    private void updateVenue() {
 //
 //        Log.d(getLocalClassName(), "updateVenue");
 //
