@@ -35,13 +35,12 @@ public class CreateEventVenueActivity extends AppCompatActivity {
     private VenueModel venueEntity;
     private Button createVenue;
     private EditText venueName;
-    private EditText venueLat;
-    private EditText venueLong;
     private Call<VenueModel> createVenueCall;
     private SupportMapFragment mapFragment;
     private Marker marker;
     private ApiCallMethods service;
     private GoogleMap googleMap;
+    private LatLng location;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,8 +54,6 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         createVenue.setOnClickListener(getOnCreateVenueClickListener());
 
         venueName = (EditText) findViewById(R.id.venueName);
-        venueLat = (EditText) findViewById(R.id.venueLat);
-        venueLong = (EditText) findViewById(R.id.venueLong);
 
         final Button searchName = (Button) findViewById(R.id.searchName);
         searchName.setOnClickListener(new View.OnClickListener() {
@@ -133,8 +130,8 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         venue.addProperty("name", venueName.getText().toString());
 
         final JsonObject address = new JsonObject();
-        address.addProperty("latitude", venueLat.getText().toString());
-        address.addProperty("longitude", venueLong.getText().toString());
+        address.addProperty("latitude", location.latitude);
+        address.addProperty("longitude", location.longitude);
 
         venue.add("address", address);
 
@@ -208,6 +205,9 @@ public class CreateEventVenueActivity extends AppCompatActivity {
         if (null != marker) {
             marker.remove();
         }
+
+        this.location = location;
+
         marker = googleMap.addMarker(new MarkerOptions().position(location));
         getAddressFromLocation(location);
     }
