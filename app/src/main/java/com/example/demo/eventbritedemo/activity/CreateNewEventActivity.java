@@ -120,7 +120,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean showLoader() {
+            public boolean shouldShowLoader() {
                 return true;
             }
         });
@@ -167,7 +167,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean showLoader() {
+            public boolean shouldShowLoader() {
                 return true;
             }
         });
@@ -196,7 +196,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean showLoader() {
+            public boolean shouldShowLoader() {
                 return true;
             }
         });
@@ -288,7 +288,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public boolean showLoader() {
+                    public boolean shouldShowLoader() {
                         return true;
                     }
                 });

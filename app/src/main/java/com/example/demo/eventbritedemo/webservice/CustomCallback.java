@@ -16,7 +16,7 @@ import retrofit2.Callback;
 public abstract class CustomCallback<T> implements Callback<T> {
 
     public CustomCallback() {
-        if (showLoader()) {
+        if (shouldShowLoader()) {
             Utility.showToastLong(getLoadingMessage());
         }
     }
@@ -37,7 +37,7 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     public abstract void onSuccess(retrofit2.Response<T> response);
 
-    public boolean showLoader() {
+    public boolean shouldShowLoader() {
         return false;
     }
 

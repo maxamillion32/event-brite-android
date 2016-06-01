@@ -96,7 +96,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean showLoader() {
+            public boolean shouldShowLoader() {
                 return true;
             }
         });
@@ -131,7 +131,7 @@ public class CreateEventTicketActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean showLoader() {
+            public boolean shouldShowLoader() {
                 return true;
             }
         });

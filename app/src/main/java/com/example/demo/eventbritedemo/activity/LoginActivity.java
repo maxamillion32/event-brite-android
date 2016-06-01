@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements Constants.ViewFl
                 if (url.contains(REDIRECT_URI)) {
                     ACCESS_CODE = url.substring(url.lastIndexOf("=") + 1, url.length());
                     authorizeUser();
+                    return true;
                 }
                 return false;
             }

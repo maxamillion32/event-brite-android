@@ -88,7 +88,7 @@ public class CreateEventVenueActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public boolean showLoader() {
+                    public boolean shouldShowLoader() {
                         return true;
                     }
                 });
@@ -190,7 +190,7 @@ public class CreateEventVenueActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public boolean showLoader() {
+                    public boolean shouldShowLoader() {
                         return true;
                     }
                 });
