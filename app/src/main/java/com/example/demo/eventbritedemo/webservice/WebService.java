@@ -39,11 +39,25 @@ public class WebService {
      * @return
      */
     @NonNull
-    private static Retrofit getRetrofitInstance(String endpoint, OkHttpClient client) {
+    public static Retrofit getRetrofitInstance(String endpoint, OkHttpClient client) {
         return new Retrofit.Builder()
                 .baseUrl(endpoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
+                .build();
+    }
+
+    /**
+     * basic retrofit instance generator
+     *
+     * @param endpoint
+     * @return
+     */
+    @NonNull
+    public static Retrofit getRetrofitInstance(String endpoint) {
+        return new Retrofit.Builder()
+                .baseUrl(endpoint)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 

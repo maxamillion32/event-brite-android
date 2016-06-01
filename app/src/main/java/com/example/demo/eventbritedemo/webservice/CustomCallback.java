@@ -2,11 +2,17 @@ package com.example.demo.eventbritedemo.webservice;
 
 import android.support.annotation.NonNull;
 
+import com.example.demo.eventbritedemo.model.ApiErrorModel;
 import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.utility.Validation;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 
 /**
  * callback methods with least validation
@@ -26,7 +32,18 @@ public abstract class CustomCallback<T> implements Callback<T> {
         if (Validation.isValidResponse(response)) {
             onSuccess(response);
         } else {
-            onFailure(call, null);
+            try {
+                final Converter<ResponseBody, ApiErrorModel> converter =
+                        WebService.getRetrofitInstance(ApiCallMethods.SERVICE_ENDPOINT)
+                                .responseBodyConverter(ApiErrorModel.class, new Annotation[0]);
+
+                final ApiErrorModel errorModel = converter.convert(response.errorBody());
+                onFailure(errorModel);
+            } catch (IOException e) {
+                e.printStackTrace();
+                onFailure(call, null);
+            }
+
         }
     }
 
@@ -36,6 +53,10 @@ public abstract class CustomCallback<T> implements Callback<T> {
     }
 
     public abstract void onSuccess(retrofit2.Response<T> response);
+
+    public void onFailure(ApiErrorModel error) {
+        Utility.showToast(error.getError_description());
+    }
 
     public boolean shouldShowLoader() {
         return false;
