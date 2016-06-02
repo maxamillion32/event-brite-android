@@ -41,7 +41,7 @@ public abstract class CustomCallback<T> implements Callback<T> {
                 onFailure(errorModel);
             } catch (IOException e) {
                 e.printStackTrace();
-                onFailure(call, null);
+                onFailure(call, e);
             }
 
         }
@@ -49,7 +49,7 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        Utility.showToast("ERROR!!!!!");
+        Utility.showToast("ERROR!!!!! " + (null != t ? t.getMessage() : ""));
     }
 
     public abstract void onSuccess(retrofit2.Response<T> response);
