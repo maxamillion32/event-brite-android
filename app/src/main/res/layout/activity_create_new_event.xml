@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="Pick a Pic"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

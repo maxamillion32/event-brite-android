@@ -15,6 +15,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class UpcomingEventListFragment extends AbstractEventListFragment {
+    private Call<OrderModel> ordersCall;
+
     @NonNull
     @Override
     protected String getEventType() {
@@ -23,7 +25,7 @@ public class UpcomingEventListFragment extends AbstractEventListFragment {
 
     @Override
     protected void getEventList() {
-        final Call<OrderModel> ordersCall = WebService.createServiceWithOauthHeader(ApiCallMethods
+        ordersCall = WebService.createServiceWithOauthHeader(ApiCallMethods
                 .class).getOrders();
 
         ordersCall.enqueue(new CustomCallback<OrderModel>() {
@@ -40,5 +42,13 @@ public class UpcomingEventListFragment extends AbstractEventListFragment {
             eventsEntityList.add(order.getEvent());
         }
         displayEventList(eventsEntityList);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (null != ordersCall) {
+            ordersCall.cancel();
+        }
     }
 }
