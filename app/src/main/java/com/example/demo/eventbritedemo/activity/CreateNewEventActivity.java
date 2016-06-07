@@ -271,7 +271,9 @@ public class CreateNewEventActivity extends AppCompatActivity {
     private void displayImage(Intent data) {
         final String imagePath = UriManager.getPath(data.getData(), this);
         Log.d(getLocalClassName(), "### " + imagePath);
-        initiateImageUpload(imagePath);
+        if (null != imagePath) {
+            initiateImageUpload(imagePath);
+        }
     }
 
     private void createNewEvent() {

@@ -5,4 +5,8 @@
           android:icon="@drawable/ic_search_white"
           android:title="Search"
           app:showAsAction="always"/>
+    <item android:id="@+id/orders"
+          android:icon="@drawable/ic_shopping_cart_white_24dp"
+          android:title="My Orders"
+          app:showAsAction="always"/>
 </menu>

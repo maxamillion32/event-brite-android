@@ -83,7 +83,7 @@ public class EventListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search, menu);
+        getMenuInflater().inflate(R.menu.menu_options, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -92,6 +92,9 @@ public class EventListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.search:
                 startActivity(new Intent(this, SearchEventActivity.class));
+                break;
+            case R.id.orders:
+                startActivity(new Intent(this, MyEventListActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

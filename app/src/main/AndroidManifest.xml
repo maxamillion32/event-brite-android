@@ -50,6 +50,10 @@
             android:name=".activity.CreateEventVenueActivity"
             android:label="Event Venue"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MyEventListActivity"
+            android:label="Upcoming Events"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

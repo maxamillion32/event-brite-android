@@ -19,6 +19,8 @@ import com.example.demo.eventbritedemo.webservice.ApiCallMethods;
 import com.example.demo.eventbritedemo.webservice.CustomCallback;
 import com.example.demo.eventbritedemo.webservice.WebService;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -52,7 +54,7 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
         getEventList();
     }
 
-    private void getEventList() {
+    protected void getEventList() {
         viewFlipper.setDisplayedChild(LOADING);
         if (null == apiCall) {
             final ApiCallMethods retrofitService = WebService.createServiceWithOauthHeader
@@ -65,7 +67,7 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
 
             @Override
             public void onSuccess(Response<EventResponseModel> response) {
-                displayEventList(response.body());
+                displayEventList(response.body().getEvents());
             }
 
             @Override
@@ -78,9 +80,9 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
     @NonNull
     protected abstract String getEventType();
 
-    private void displayEventList(EventResponseModel body) {
+    protected void displayEventList(List<EventResponseModel.EventsEntity> eventList) {
         viewFlipper.setDisplayedChild(SUCCESS);
-        recyclerView.setAdapter(new EventListAdapter(getActivity(), body.getEvents()));
+        recyclerView.setAdapter(new EventListAdapter(getActivity(), eventList));
     }
 
     @Override

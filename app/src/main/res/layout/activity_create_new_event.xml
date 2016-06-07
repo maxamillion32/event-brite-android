@@ -92,12 +92,12 @@
 
             <Button
                 android:id="@+id/btnImagePick"
-                android:visibility="gone"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Pick a Pic"/>
+                android:text="Pick a Pic"
+                android:visibility="visible"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

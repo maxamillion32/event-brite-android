@@ -6,8 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:inputType">textCapWords</item>
-        <item name="android:lineSpacingExtra">3dp</item>
     </style>
 
     <style name="Theme.NoActionBar" parent="AppTheme">

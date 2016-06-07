@@ -3,6 +3,7 @@ package com.example.demo.eventbritedemo.webservice;
 import com.example.demo.eventbritedemo.model.AuthResponseModel;
 import com.example.demo.eventbritedemo.model.EventResponseModel;
 import com.example.demo.eventbritedemo.model.ImageUploadModel;
+import com.example.demo.eventbritedemo.model.OrderModel;
 import com.example.demo.eventbritedemo.model.UserDetailModel;
 import com.example.demo.eventbritedemo.model.VenueModel;
 import com.google.gson.JsonObject;
@@ -65,7 +66,7 @@ public interface ApiCallMethods {
     @GET("v3/events/search/")
     Call<EventResponseModel> searchEventWith(@Query("q") String stringVal);
 
-    @GET("v3/events/{id}/?expand=ticket_classes/")
+    @GET("v3/events/{id}/?expand=ticket_classes")
     Call<EventResponseModel.EventsEntity> getEventWithId(@Path("id") String eventId);
 
     @GET("v3/media/upload/")
@@ -88,4 +89,7 @@ public interface ApiCallMethods {
 
     @GET("geocode/json")
     Call<JsonObject> getAddressFor(@Query("latlng") String name);
+
+    @GET("v3/users/me/orders/?expand=event")
+    Call<OrderModel> getOrders();
 }
