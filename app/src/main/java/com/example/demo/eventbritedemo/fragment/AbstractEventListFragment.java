@@ -81,6 +81,10 @@ public abstract class AbstractEventListFragment extends PagerFragment implements
     protected abstract String getEventType();
 
     protected void displayEventList(List<EventResponseModel.EventsEntity> eventList) {
+        if (null == eventList || eventList.isEmpty()) {
+            viewFlipper.setDisplayedChild(ERROR);
+            return;
+        }
         viewFlipper.setDisplayedChild(SUCCESS);
         recyclerView.setAdapter(new EventListAdapter(getActivity(), eventList));
     }
