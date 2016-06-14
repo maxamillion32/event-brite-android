@@ -2,6 +2,8 @@ package com.example.demo.eventbritedemo.webservice;
 
 import android.support.annotation.NonNull;
 
+import com.example.demo.eventbritedemo.ApplicationClass;
+import com.example.demo.eventbritedemo.R;
 import com.example.demo.eventbritedemo.model.ApiErrorModel;
 import com.example.demo.eventbritedemo.utility.Utility;
 import com.example.demo.eventbritedemo.utility.Validation;
@@ -49,7 +51,8 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        Utility.showToast("ERROR!!!!! " + (null != t ? t.getMessage() : ""));
+        Utility.showToast(ApplicationClass.getInstance().getString(R.string.error) + " " +
+                (null != t ? t.getMessage() : ""));
     }
 
     public abstract void onSuccess(retrofit2.Response<T> response);
@@ -64,6 +67,6 @@ public abstract class CustomCallback<T> implements Callback<T> {
 
     @NonNull
     public String getLoadingMessage() {
-        return "Loading";
+        return ApplicationClass.getInstance().getString(R.string.loading);
     }
 }

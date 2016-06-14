@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="@dimen/ten">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Next"/>
+            android:text="@string/next"/>
 
         <Button
             android:id="@+id/venue"
@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Add Venue to the Event (Optional)"
+            android:text="@string/add_venue_to_the_event"
             android:visibility="visible"/>
     </LinearLayout>
 
@@ -47,8 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="Please enter the Venue details"
+                android:padding="@dimen/ten"
+                android:text="@string/please_enter_the_venue_details"
                 android:textColor="@color/colorAccent"/>
 
             <EditText
@@ -56,8 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Event Name"
-                android:padding="15dp"
+                android:hint="@string/event_name"
+                android:padding="@dimen/fifteen"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <Button
@@ -67,8 +67,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="?attr/selectableItemBackground"
-                android:padding="15dp"
-                android:text="Select Start Date"/>
+                android:padding="@dimen/fifteen"
+                android:text="@string/select_start_date"/>
 
             <Button
                 android:id="@+id/btnEndDate"
@@ -77,17 +77,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="?attr/selectableItemBackground"
-                android:padding="15dp"
-                android:text="Select End Date"/>
+                android:padding="@dimen/fifteen"
+                android:text="@string/select_end_date"/>
 
             <EditText
                 android:id="@+id/eventCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Currency"
-                android:padding="15dp"
-                android:text="USD"
+                android:layout_marginBottom="@dimen/ten"
+                android:hint="@string/currency"
+                android:padding="@dimen/fifteen"
+                android:text="@string/usd"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <Button
@@ -96,8 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Pick a Pic"
-                android:visibility="gone"/>
+                android:text="@string/pick_a_pic"
+                android:visibility="visible"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

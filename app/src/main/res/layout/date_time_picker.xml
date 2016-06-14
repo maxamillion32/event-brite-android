@@ -27,8 +27,8 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="Done"
+        android:layout_margin="@dimen/fifteen"
+        android:text="@string/done"
         android:timePickerMode="spinner"/>
 
 </LinearLayout>

@@ -15,15 +15,15 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/ten">
 
         <TextView
             android:id="@+id/eventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
-            android:padding="15dp"
+            android:layout_marginBottom="@dimen/ten"
+            android:padding="@dimen/fifteen"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
             tools:text="sdgdfgdsg"/>
@@ -33,8 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/eventName"
-            android:layout_marginBottom="10dp"
-            android:padding="15dp"
+            android:layout_marginBottom="@dimen/ten"
+            android:padding="@dimen/fifteen"
             android:textAppearance="?android:attr/textAppearanceMedium"
             tools:text="sdgdfgdsg"/>
 
@@ -42,8 +42,8 @@
             android:id="@+id/eventLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:padding="15dp"
+            android:layout_marginBottom="@dimen/ten"
+            android:padding="@dimen/fifteen"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="gone"
             tools:text="sdgdfgdsg"/>
@@ -61,7 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Add Ticket"
+                android:text="@string/add_ticket"
                 android:visibility="gone"/>
 
             <Button
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Pay"
+                android:text="@string/pay"
                 android:visibility="gone"/>
         </LinearLayout>
 

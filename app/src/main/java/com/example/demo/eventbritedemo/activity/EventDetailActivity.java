@@ -46,7 +46,7 @@ public class EventDetailActivity extends AppCompatActivity implements
     private void initViews() {
         eventId = getIntent().getStringExtra(Constants.IntentKeys.EVENT_ID);
         if (TextUtils.isEmpty(eventId)) {
-            Utility.showToast("ERROR!!!");
+            Utility.showToast(getString(R.string.error));
             finish();
         }
 

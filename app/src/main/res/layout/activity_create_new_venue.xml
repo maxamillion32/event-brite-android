@@ -3,17 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="@dimen/ten">
 
     <TextView
         android:id="@+id/txtLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/ten"
         android:gravity="center"
-        android:padding="10dp"
-        android:text="Please enter the Venue details"
+        android:padding="@dimen/ten"
+        android:text="@string/please_enter_the_venue_details"
         android:textColor="@color/colorAccent"/>
 
     <EditText
@@ -21,8 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtLabel"
-        android:hint="Venue Name"
-        android:padding="15dp"
+        android:hint="@string/venue_name"
+        android:padding="@dimen/fifteen"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <Button
@@ -32,17 +32,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/venueName"
         android:layout_centerHorizontal="true"
-        android:text="Search"/>
+        android:text="@string/search"/>
 
     <EditText
         android:id="@+id/venueLat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/venueName"
-        android:layout_marginBottom="10dp"
-        android:hint="Venue Latitude"
-        android:padding="15dp"
-        android:text="40.690302"
+        android:layout_marginBottom="@dimen/ten"
+        android:hint="@string/venue_latitude"
+        android:padding="@dimen/fifteen"
+        android:text="@string/_40_690302"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone"/>
 
@@ -51,10 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/venueLat"
-        android:layout_marginBottom="10dp"
-        android:hint="Venue Longitude"
-        android:padding="15dp"
-        android:text="-73.950266"
+        android:layout_marginBottom="@dimen/ten"
+        android:hint="@string/venue_longitude"
+        android:padding="@dimen/fifteen"
+        android:text="@string/_73_950266"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone"/>
 
@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Create Venue"/>
+        android:text="@string/create_venue"/>
 
     <fragment
         android:id="@+id/map"
@@ -73,6 +73,6 @@
         android:layout_height="match_parent"
         android:layout_above="@id/createVenue"
         android:layout_below="@id/searchName"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="@dimen/ten"/>
 
 </RelativeLayout>

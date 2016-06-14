@@ -204,13 +204,14 @@ public class CreateNewEventActivity extends AppCompatActivity {
 
     private void askImageCapture() {
         new AlertDialog.Builder(CreateNewEventActivity.this)
-                .setPositiveButton("Pick Gallery", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.pick_gallery), new DialogInterface
+                        .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         openGallery();
                     }
                 })
-                .setNegativeButton("Capture new", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.capture_new), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         openCamera();
@@ -285,7 +286,7 @@ public class CreateNewEventActivity extends AppCompatActivity {
                 .enqueue(new CustomCallback<EventResponseModel.EventsEntity>() {
                     @Override
                     public void onSuccess(Response<EventResponseModel.EventsEntity> response) {
-                        Utility.showToast("Event Created Successfully");
+                        Utility.showToast(getString(R.string.toast_event_created));
                         gotoCreateEventTicketActivity(response.body());
                     }
 

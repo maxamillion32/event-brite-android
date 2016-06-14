@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:padding="10dp">
+    android:padding="@dimen/ten">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Create Event"/>
+            android:text="@string/create_event"/>
 
         <Button
             android:id="@+id/btnPublishEvent"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:text="Publish"
+            android:text="@string/publish"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -44,45 +44,45 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/twenty"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="In order to make the Event Live, Please add tickets for the event"
+                android:padding="@dimen/ten"
+                android:text="@string/in_order_to_make_the_event_live_please_add_tickets_for_the_event"
                 android:textColor="@color/colorAccent"/>
 
             <EditText
                 android:id="@+id/ticketName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Ticket Name"
-                android:padding="15dp"/>
+                android:layout_marginBottom="@dimen/ten"
+                android:hint="@string/ticket_name"
+                android:padding="@dimen/fifteen"/>
 
             <EditText
                 android:id="@+id/totalTickets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Total Tickets"
+                android:hint="@string/total_tickets"
                 android:inputType="number"
-                android:padding="15dp"
-                android:text="100"/>
+                android:padding="@dimen/fifteen"
+                android:text="@string/_100"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/totalTickets"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/ten"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="Select Type of Ticket"
+                android:padding="@dimen/ten"
+                android:text="@string/select_type_of_ticket"
                 android:textColor="@color/colorAccent"/>
 
             <RadioGroup
                 android:id="@+id/radioGrp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/ten"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -92,14 +92,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="Free"/>
+                    android:text="@string/free"/>
 
                 <RadioButton
                     android:id="@+id/radioBtnPaid"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Paid"/>
+                    android:text="@string/paid"/>
 
             </RadioGroup>
 
@@ -107,10 +107,10 @@
                 android:id="@+id/ticketPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Ticket Price ($)"
+                android:layout_marginBottom="@dimen/ten"
+                android:hint="@string/ticket_price"
                 android:inputType="number"
-                android:padding="15dp"
+                android:padding="@dimen/fifteen"
                 android:visibility="gone"/>
 
         </LinearLayout>

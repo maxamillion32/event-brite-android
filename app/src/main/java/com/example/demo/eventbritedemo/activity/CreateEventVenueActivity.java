@@ -83,7 +83,7 @@ public class CreateEventVenueActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Response<VenueModel> response) {
                         venueEntity = response.body();
-                        Utility.showToast("Venue created successfully");
+                        Utility.showToast(getString(R.string.toast_venue_created));
                         finish();
                     }
 

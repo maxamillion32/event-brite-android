@@ -8,8 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="@dimen/ten"
+        android:layout_marginRight="@dimen/fifteen"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -17,15 +17,15 @@
             android:id="@+id/edtSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search for Event"
-            android:padding="15dp"
+            android:hint="@string/search_for_event"
+            android:padding="@dimen/fifteen"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <ProgressBar
             android:id="@+id/progressLoader"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="@dimen/fifteen"
+            android:layout_height="@dimen/fifteen"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:visibility="gone"/>
