@@ -6,19 +6,19 @@ public class ApiErrorModel {
     private String error_description;
     private String error;
 
-    public int getStatus_code() {
+    public int getStatusCode() {
         return status_code;
     }
 
-    public void setStatus_code(int status_code) {
+    public void setStatusCode(int status_code) {
         this.status_code = status_code;
     }
 
-    public String getError_description() {
+    public String getErrorDescription() {
         return error_description;
     }
 
-    public void setError_description(String error_description) {
+    public void setErrorDescription(String error_description) {
         this.error_description = error_description;
     }
 
